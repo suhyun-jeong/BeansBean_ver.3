@@ -6,17 +6,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <style type="text/css">
-	.label {
+	span {
 		display:inline-block;
-		width:70px;
-		cursor:default;
-	}
-	
-	.findIdPw {
-		display:inline-block;
-		width:49%;
-		text-align:center;
-		font-size:12px;
 	}
 </style>
 
@@ -49,34 +40,36 @@
 
 <!-- 아이디 혹은 비밀번호가 일치하지 않을 때 -->
 <c:if test="${not empty loginMsg}">
-	<script type="text/javascript">alert("${loginMsg}")</script>
+	<script type="text/javascript">alert("${loginMsg}");</script>
 	<% session.removeAttribute("loginMsg"); %>
 </c:if>
 
 <!-- 로그인 폼 -->
 <form action="login" method="post">
-	<table>
-		<tr>
-			<td>
-				<span class="label">아이디: </span> 
-				<input type="text" name="userid" id="userid" class="loginInput"><br>
-				<span class="label">비밀번호: </span>
-				<input type="text" name="passwd" id="passwd" class="loginInput">
-			</td>
-			<td>
-				<input type="submit" value="로그인" style="width:60px;height:50px;">
-			</td>
-		</tr>
+		<div>
+			<ul>
+				<li>
+					<span>아이디: </span> 
+					<input type="text" name="userid" id="userid" class="loginInput"><br>
+					<span>비밀번호: </span>
+					<input type="text" name="passwd" id="passwd" class="loginInput">
+				</li>
+				<li>
+					<input type="submit" value="로그인" style="width:60px;height:50px;">
+				</li>
+			</ul>
+		</div>
 		
-		<tr>
-			<td colspan="2">
-				<span class="findIdPw">
-					<a href="">아이디 찾기</a>
-				</span>
-				<span class="findIdPw">
-					<a href="">비밀번호 찾기</a>
-				</span>
-			</td>
-		</tr>
-	</table>
+		<div>
+			<ul>
+				<li>
+					<span>
+						<a href="">아이디 찾기</a>
+					</span>
+					<span>
+						<a href="">비밀번호 찾기</a>
+					</span>
+				</li>
+			</ul>
+		</div>
 </form>

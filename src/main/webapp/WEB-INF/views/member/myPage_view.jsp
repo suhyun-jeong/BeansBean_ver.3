@@ -7,22 +7,10 @@
 
 <%@ page import="com.dto.MemberDTO" %>
 
-<style type="text/css">
-	th {
-		padding-right:20px;
-		text-align:right;
-		cursor:default;
-
-		text-align:right;
-		padding-right:20px;
-	}
-</style>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
-
 	$(function() {
-		// 비밀번호 보기/감추기
+		// 비밀번호 보이기/가리기
 		var userPasswd = "<c:out value='${userInfo.passwd}' />";	// 비밀번호
 		var mosaicPasswd = "";	// 가려진 비밀번호
 		for (var i = 0; i < userPasswd.length; i++)
@@ -75,7 +63,7 @@
 	});
 </script>
 
-<!-- 회원 정보 수정 완료 후 -->
+<!-- 회원 정보 수정 완료 후 메세지 출력 -->
 <c:if test="${not empty userInfoMsg}">
 	<script type="text/javascript">alert("${userInfoMsg}")</script>
 	<% session.removeAttribute("userInfoMsg"); %>
@@ -83,11 +71,11 @@
 
 <!-- 회원 정보 폼 -->
 <form action="userInfoUpdate" method="post">
-	<table>
-		<tr>
-			<th>아이디</th>
+	<div>
+		<ul>
+			<li>아이디</li>
 
-			<td style="cursor:default;">
+			<li>
 				${userInfo.userid}
 				<input type="hidden" name="userid" value="${userInfo.userid}">
 				<span style="margin-left:20px;">
@@ -95,47 +83,33 @@
 					<c:if test="${userInfo.usercode == 20}">(일반 회원)</c:if>
 					<c:if test="${userInfo.usercode == 30}">(사업자 회원)</c:if>
 				</span>
-			</td>
-		</tr>
-		
-		<tr><td colspan="3"><hr></td></tr>
-		
-		<tr>
-			<th>비밀번호 변경</th>
-			<td>
+			</li>
+
+			<li>비밀번호 변경</li>
+			<li>
 				<span id="showPw"></span>
-				<span style="float:right;cursor:pointer;">
+				<span style="float:right;">
 					<img src="images/icons/eye-open.png" id="showPwIcon" alt="비밀번호 보이기/가리기">
 					<button id="changePasswdBtn">변경하기</button>
 				</span>
-			</td>
-		</tr>
-		
-		<tr><td colspan="3"><hr></td></tr>
-		
-		<tr>
-			<th>이름</th>
-			<td><input type="text" name="username" id="username" placeholder="이름 " size="6" value="${userInfo.username}"></td>
-		</tr>
-		
-		<tr><td colspan="3"><hr></td></tr>
-		
-		<tr>
-			<th>주소</th>
-			<td>
+			</li>
+
+			<li>이름</li>
+			<li>
+				<input type="text" name="username" id="username" placeholder="이름 " size="6" value="${userInfo.username}">
+			</li>
+
+			<li>주소</li>
+			<li>
 				<input type="text" name="post" id="sample4_postcode" placeholder="우편번호" size="5" maxlength="5" value="${userInfo.post}">
 				<input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
 				<input type="text" name="addr1" id="sample4_roadAddress" placeholder="도로명주소" value="${userInfo.addr1}">
 				<input type="text" name="addr2" id="sample4_jibunAddress" placeholder="지번주소" value="${userInfo.addr2}">
 				<span id="guide" style="color:#999"></span>
-			</td>
-		</tr>
-		
-		<tr><td colspan="3"><hr></td></tr>
-		
-		<tr>
-			<th>전화번호</th>
-			<td>
+			</li>
+
+			<li>전화번호</li>
+			<li>
 				<select name="phone1" id="phone1" class="phoneNumber">
 					<option value="010" <c:if test="${userInfo.phone1 == 010}">selected="selected"</c:if>>010</option>
 					<option value="011" <c:if test="${userInfo.phone1 == 011}">selected="selected"</c:if>>011</option>
@@ -144,14 +118,10 @@
 				<input type="text" name="phone2" id="phone2" class="phoneNumber" size="4" maxlength="4" value="${userInfo.phone2}">
 				-
 				<input type="text" name="phone3" id="phone3" class="phoneNumber" size="4" maxlength="4" value="${userInfo.phone3}">
-			</td>
-		</tr>
-		
-		<tr><td colspan="3"><hr></td></tr>
-		
-		<tr>
-			<th>이메일</th>
-			<td>
+			</li>
+
+			<li>이메일</li>
+			<li>
 				<input type="text" name="email1" id="email1" class="emailAddress" value="${userInfo.email1}">
 				@
 				<input type="text" name="email2" id="email2" class="emailAddress" placeholder="도메인" value="${userInfo.email2}">
@@ -159,13 +129,17 @@
 					<option value="daum.net" <c:if test="${userInfo.email2 == 'daum.net'}">selected="selected"</c:if>>daum.net</option>
 					<option value="naver.com" <c:if test="${userInfo.email2 == 'naver.com'}">selected="selected"</c:if>>naver.com</option>
 				</select>
-			</td>
-		</tr>
-	</table>
+			</li>
+		</ul>
+	</div>
 	
-	<br>
-	
-	<input type="submit" value="정보 수정">
+	<div>
+		<ul>
+			<li>
+				<input type="submit" value="정보 수정">
+			</li>
+		</ul>
+	</div>
 </form>
 
 <!-- 주소 검색 - 다음 API -->

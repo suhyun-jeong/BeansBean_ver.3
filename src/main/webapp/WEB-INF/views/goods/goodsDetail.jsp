@@ -74,6 +74,12 @@
 				$("#cart").on("click", function() {
 					$("form").attr("action", "loginCheck/cartAdd");
 				});//end clickevent
+				
+				
+				// 구매 버튼 클릭 시 구매 페이지로 이동
+				$("#orderBtn").click(function() {
+					$("form").attr("action", "orderForm");
+				});
 		});//end ready
 		
 </script>
@@ -191,7 +197,7 @@ ${goodsDetail.gname}
 		</div>
 	</div>
 	<div style='width:100%; float:left;'>
-		<br> <button >구매</button>
+		<br> <button id="orderBtn">구매</button>
 		&nbsp;&nbsp;
 		<button id="cart">장바구니</button>
 	</div>

@@ -4,23 +4,10 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<style type="text/css">
-	table {
-		border-spacing:5px;
-		border-collapse:separate;
-		cursor:default;
-	}
-	
-	#goodsInfo #goodsValues td {
-		padding:0 20px;
-	}
-	
-	.placeInfo th {
-		padding:0 10px;
-	}
-</style>
+<%@ page import="com.dto.CartDTO" %>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script type="text/javascript">
 	$(function() {
@@ -31,47 +18,37 @@
 
 		
 		// 번들에서 숫자 및 단위 추출
-		if (bCategory != "") {	// 도매 품목일 경우
+		if (bCategory != "" && !bCategory.startsWith("단품")) {	// 도매 품목일 경우
 			bundleInt = parseInt(bCategory.replaceAll("[^\\d]", ""));	// 번들에서 숫자 추출
-			$("#bTotal").text(bundleInt * gAmount);	// 전체 수량 화면에 출력
-			
 			var bundleUnit = bCategory.replace(bundleInt.toString(), "").trim();	// 번들에서 단위 추출
 			
-			$("#bUnit").text("(" + bundleUnit + ")");	// 전체 수량 화면에 출력
-		} else	// 소매 품목일 경우
-			$("#bTotal").text(gAmount);	// 전체 수량 화면에 출력
-		
-		$("#totalPrice").text(gPrice * gAmount);	// 총합 출력
+			$("#bUnit").text("(" + bundleUnit + ")");	// 번들 단위 화면에 출력
+		}
+		$("#bTotal").text(gAmount * bundleInt);	// 전체 수량 화면에 출력	
+		$("#totalPrice").text(bundleInt * gPrice * gAmount);	// 총합 출력
 		
 		
 		// 수량 입력창에 숫자만 받기
 		$("#gamount").keyup(function(event) {	// 숫자 외의 값을 입력하면 입력창 초기화
-			if (event.keyCode == 8 || event.keyCode == 13) {	// backspace or enter
-				if ($("#gamount").val().length > 0) {		// 입력창이 비어있지 않을 때
-					$("#bTotal").text(parseInt(this.value) * bundleInt);	// 전체 수량 화면에 출력
-					$("#totalPrice").text(gPrice * gAmount);	// 총합 출력
-				} else {
-					$("#bTotal").text(0);	// 전체 수량 초기화
-					$("#totalPrice").text(0);	// 총합 0으로 초기화
-				}
-				
-				return;
+			if (!((event.keyCode >= 48 && event.keyCode <= 57)	// 0~9가 아닐 경우
+					|| (event.keyCode >= 96 && event.keyCode <= 105))) {	// Num Lock 키패드 0~9가 아닐 경우
+				if (event.keyCode == 8 || event.keyCode == 46) {	//  backspace or delete
+					if ($("#gamount").val().length < 1) {	// 입력창이 비었을 경우 출력 초기화
+						$("#bTotal").text(0);
+						$("#totalPrice").text(0);
+					}
+				} else if (event.keyCode == 13	// enter
+						|| (event.keyCode >= 37 && event.keyCode <= 40))	// 방향키
+					return true;
+				else	// 그 외
+					$("#gamount").val(0);	// 입력창 초기화
 			}
 			
-			if (!((event.keyCode >= 48 && event.keyCode <= 57)	// 0~9가 아닐 경우
-					|| (event.keyCode >= 96 && event.keyCode <= 105)))	// Num Lock 키패드 0~9가 아닐 경우
-				$("#gamount").val(0);	// 입력창 초기화
-			
-			$("#bTotal").text(parseInt(this.value) * bundleInt);	// 전체 수량 화면에 출력
-			$("#totalPrice").text(gPrice * $("#gamount").val());	// 총합 출력
+			if ($("#gamount").val().length > 0) {
+				$("#bTotal").text(parseInt(this.value) * bundleInt);	// 전체 수량 화면에 출력
+				$("#totalPrice").text(gPrice * $("#gamount").val());	// 총합 출력
+			}
 		});
-		/*
-		$("#gamount").bind("paste", function(event) {	// 붙여넣기하면 입력창 초기화
-			$("#gamount").val(0);	// 입력창 초기화
-		
-			$("#totalPrice").text(gPrice * $("#gamount").val());	// 총합 출력
-		});
-		*/
 		
 		
 		// 계정에 저장된 배송지 정보 사용하기
@@ -145,220 +122,277 @@
 	});
 </script>
 
+<!-- 회원/비회원 및 도/소매 여부 체크 -->
+<%
+	int usercode = 0;	// 0: 비회원, 20: 일반 회원, 30: 사업자-소매, 35: 사업자-도매
+
+	// 로그인 여부
+	if (session.getAttribute("login") != null)
+		usercode = 20;
+
+	// 사업자 회원의 도/소매 여부
+	boolean bundle = false;	// false: 소매, true: 도매
+	CartDTO cDTO = (CartDTO) request.getAttribute("cDTO");
+	if (cDTO.getBcategory() != null && !(cDTO.getBcategory().length() < 1)) {
+		if (!cDTO.getBcategory().contains("단품")) {	// 도매
+			bundle = true;
+			usercode = 35;
+		} else	// 소매
+			usercode = 30;
+	}
+%>
+<c:set var="usercode" value="<%= usercode %>" />
+<c:set var="bundle" value="<%= bundle %>" />
+
+<!-- 
+<c:choose>
+	<c:when test="${usercode == 0}">
+		<p>비회원</p>
+	</c:when>
+	<c:when test="${usercode == 20}">
+		<p>일반 회원</p>
+	</c:when>
+	<c:when test="${usercode == 30}">
+		<p>사업자 회원 - 소매</p>
+	</c:when>
+	<c:when test="${usercode == 35}">
+		<p>사업자 회원 - 도매</p>
+	</c:when>
+</c:choose>
+ -->
+
 <form action="oneGoodsOrder" method="post">
+	<!-- hidden data -->
 	<input type="hidden" name="num" value="${cDTO.num}">
-	<input type="hidden" name="userid" value="${login.userid}">
+	<input type="hidden" name="userid" value="${cDTO.userid}">
 	<input type="hidden" name="gcode" value="${cDTO.gcode}">
 	<input type="hidden" name="gname" value="${cDTO.gname}">
 	<input type="hidden" name="bcategory" value="${cDTO.bcategory}">
 	<input type="hidden" name="vcategory" value="${cDTO.vcategory}">
-	<input type="hidden" id="gprice" name="gprice" value="${cDTO.gprice}">
+	<input type="hidden" id="gprice" name="gprice" value="<c:choose>
+		<c:when test="${usercode == 35}">${bDTO.bprice}</c:when>
+		<c:otherwise>${cDTO.gprice}</c:otherwise>
+	</c:choose>">
 	<input type="hidden" name="gimage" value="${cDTO.gimage}">
 
-	<h3 style="cursor:default;">주문 상품 확인</h3>
-	<table id="goodsInfo">
-		<!-- 구분선 -->
-		<tr>
-			<c:if test="${not empty cDTO.bcategory}">	<!-- 도매 품목 -->
-				<td colspan="8"><hr></td>
-			</c:if>
-			<c:if test="${empty cDTO.bcategory}">	<!-- 소매 품목 -->
-				<td colspan="6"><hr></td>
-			</c:if>
-		</tr>
-		
-		<tr>
-			<th>주문 번호</th>
-			<th colspan="2">상품 정보</th>
-			<c:if test="${not empty cDTO.bcategory}">	<!-- 도매 품목 -->
-				<th>번들</th>
-			</c:if>
-			<th>옵션</th>
-			<th>판매가</th>
-			<th>수량</th>
-			<c:if test="${not empty cDTO.bcategory}">	<!-- 도매 품목 -->
-				<th>전체 수량</th>
-			</c:if>
-		</tr>
-		
-		<!-- 구분선 -->
-		<tr>
-			<c:if test="${not empty cDTO.bcategory}">	<!-- 도매 품목 -->
-				<td colspan="8"><hr></td>
-			</c:if>
-			<c:if test="${empty cDTO.bcategory}">	<!-- 소매 품목 -->
-				<td colspan="6"><hr></td>
-			</c:if>
-		</tr>
-		
-		<tr id="goodsValues">
-			<td style="text-align:center;">${cDTO.num}</td>
-			<td style="">
-				<c:forTokens var="token" items="${cDTO.gimage}" delims="." varStatus="status">
-					<c:if test="${status.last}">
-						<c:choose>
-							<c:when test="${token eq 'jpg' || token eq 'gif' || token eq 'png' || token eq 'bmp'}">
-								<img src="images/${cDTO.gimage}" border="0" width="80" alt="상품 이미지" />
-							</c:when>
-							<c:otherwise>
-								<img src="images/${cDTO.gimage}.jpg" border="0" width="80" alt="상품 이미지" />
-							</c:otherwise>
-						</c:choose>
-					</c:if>
-				</c:forTokens>
-			</td>
-			<td>${cDTO.gname}</td>
-			<c:if test="${not empty cDTO.bcategory}">	<!-- 도매 품목 -->
-				<td>${bDTO.bcategory}</td>
-			</c:if>
-			<td>${cDTO.vcategory}</td>
-			<td id="price" style="text-align:center;">
-				<c:if test="${not empty cDTO.bcategory}">	<!-- 도매 품목 -->
-					${bDTO.bprice}	<!-- bunble 테이블에서 gCode로 검색해 가져온 DTO -->
-				</c:if>
-				<c:if test="${empty cDTO.bcategory}">	<!-- 소매 품목 -->
-					${cDTO.gprice}
-				</c:if>
-			</td>
-			<td>
-				<input type="text" id="gamount" name="gamount" value="${cDTO.gamount}" size="2">
-			</td>
-			<c:if test="${not empty cDTO.bcategory}">	<!-- 도매 품목 -->
-				<td id="bTotal" style="text-align:center;"></td>
-			</c:if>
-		</tr>
-		
-		<!-- 구분선 -->
-		<tr>
-			<c:if test="${not empty cDTO.bcategory}">	<!-- 도매 품목 -->
-				<td colspan="8"><hr></td>
-			</c:if>
-			<c:if test="${empty cDTO.bcategory}">	<!-- 소매 품목 -->
-				<td colspan="6"><hr></td>
-			</c:if>
-		</tr>
-		
-		<tr>
-			<c:if test="${not empty cDTO.bcategory}">	<!-- 도매 품목 -->
-				<td colspan="8">
-					총 결제 금액: <span id="totalPrice"></span>원
-				</td>
-			</c:if>
-			<c:if test="${empty cDTO.bcategory}">	<!-- 소매 품목 -->
-				<td colspan="6">
-					총 결제 금액: <span id="totalPrice"></span>원
-				</td>
-			</c:if>
-		</tr>
-	</table><br>
 
-	<h3 style="cursor:default;">배송지 정보</h3>
-	<table id="orderPlace">
-		<!-- 유저 정보에서 가져온 배송지 -->
-		<c:if test="${not empty login}">	<!-- 로그인되어있을 때 -->
-			<tr>
-				<td>
-					<table id="loginUser" class="placeInfo">
-						<tr>
-							<th>이름</th>
-							<td>
-								<input type="text" size="6" value="${login.username}" readonly>
-							</td>
-						</tr>
-					
-						<tr><td colspan="2"><hr></td></tr>
-					
-						<tr>
-							<th>주소</th>
-							<td>
-								<input type="text" class="userAddress" size="5" maxlength="5" value="${login.post}" readonly>
-								<!-- <input type="button" onclick="" value="우편번호 찾기"> -->
-								<br>
-								<input type="text" class="userAddress" value="${login.addr1}" readonly>
-								<input type="text" class="userAddress" value="${login.addr2}" readonly>
-								<!-- <span id="guide" style="color:#999"></span> -->
-							</td>
-						</tr>
-					
-						<tr><td colspan="2"><hr></td></tr>
-						
-						<tr>
-							<th>전화번호</th>
-							<td>
-								<input type="text" class="userPhone" size="3" maxlength="3" value="0${login.phone1}" readonly>
-								-
-								<input type="text" class="userPhone" size="4" maxlength="4" value="${login.phone2}" readonly>
-								-
-								<input type="text" class="userPhone" size="4" maxlength="4" value="${login.phone3}" readonly>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-			
-			<tr>
-				<td style="padding:10px;font-size:12px;">
-					<div style="margin:20px 0;padding:10px;border:1px lightgrey solid;">
-						<input type="checkbox" id="same1"> 계정에 저장된 배송지를 사용합니다.<br>
-						<input type="checkbox" id="same2"> 계정에 저장된 연락처를 사용합니다.
-					</div>
-				</td>
-			</tr>
-		</c:if>
+	<div><ul><li>주문 상품 확인</li></ul></div>
+	
+	<!-- 사업자 회원 - 도매 -->
+	<c:if test="${usercode == 35}">
+		<div>
+			<ul>
+				<li>주문 번호</li>
+				<li>상품 정보</li>
+				<li>번들</li>
+				<li>옵션</li>
+				<li>판매가</li>
+				<li>수량</li>
+				<li>전체 수량</li>
+			</ul>
 		
-		<tr>
-			<td>
-				<!-- 새로 입력할 배송지 -->
-				<table id="loginUser" class="placeInfo">
-					<tr>
-						<th>수취인</th>
-						<td>
-							<input type="text" id="ordername" class="inputName" name="ordername" size="6" value="">
-						</td>
-					</tr>
-					
-					<tr><td colspan="2"><hr></td></tr>
-					
-					<tr>
-						<th>배송지</th>
-						<td>
-							<input type="text" name="post" id="sample4_postcode" class="inputPlace" placeholder="우편번호" size="5" maxlength="5" value="${userInfo.post}">
-							<input type="button" id="postBtn" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
-							<input type="text" name="addr1" id="sample4_roadAddress" class="inputPlace" placeholder="도로명주소" value="${userInfo.addr1}">
-							<input type="text" name="addr2" id="sample4_jibunAddress" class="inputPlace" placeholder="지번주소" value="${userInfo.addr2}">
-							<span id="guide" style="color:#999"></span>
-						</td>
-					</tr>
-					
-					<tr><td colspan="2"><hr></td></tr>
-					
-					<tr>
-						<th>연락처</th>
-						<td>
-							<select name="phone1" id="phone1" class="inputPhone">
-								<option value="010" <c:if test="${userInfo.phone1 == 010}">selected="selected"</c:if>>010</option>
-								<option value="011" <c:if test="${userInfo.phone1 == 011}">selected="selected"</c:if>>011</option>
-							</select>
-							-
-							<input type="text" name="phone2" id="phone2" class="inputPhone" size="4" maxlength="4" value="${userInfo.phone2}">
-							-
-							<input type="text" name="phone3" id="phone3" class="inputPhone" size="4" maxlength="4" value="${userInfo.phone3}">
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table><br>
+			<ul>
+				<li>
+					${cDTO.num}
+				</li>
+				<li>
+					<!-- 이미지 처리 -->
+					<c:forTokens var="token" items="${cDTO.gimage}" delims="." varStatus="status">
+						<c:if test="${status.last}">
+							<c:choose>
+								<c:when test="${token eq 'jpg' || token eq 'gif' || token eq 'png' || token eq 'bmp'}">
+									<img src="images/${cDTO.gimage}" border="0" width="80" alt="상품 이미지" />
+								</c:when>
+								<c:otherwise>
+									<img src="images/${cDTO.gimage}.jpg" border="0" width="80" alt="상품 이미지" />
+								</c:otherwise>
+							</c:choose>
+						</c:if>
+					</c:forTokens>
+					<span style="margin-left:20px;">
+						${cDTO.gname}
+					</span>
+				</li>
+				<li>
+					${bDTO.bcategory}
+				</li>
+				<li>
+					${cDTO.vcategory}
+				</li>
+				<li id="price">
+					${bDTO.bprice}
+				</li>
+				<li>
+					<input type="text" id="gamount" name="gamount" value="${cDTO.gamount}" size="2">
+				</li>
+				<li>
+					<span id="bTotal"></span><br>
+					<span id="bUnit"></span>
+				</li>
+			</ul>
+		</div>
+	</c:if>
 	
-	<h3 style="cursor:default;">결제 수단</h3>
-	<div style="cursor:default;">
-		<input type="radio" name="paymethod" value="신용카드" checked="checked">신용카드&nbsp;
-		<input type="radio" name="paymethod" value="계좌이체">계좌이체&nbsp;
-		<input type="radio" name="paymethod" value="무통장입금">무통장입금&nbsp;
-		<input type="radio" name="paymethod" value="카카오페이">카카오페이&nbsp;
-	</div><br>
+	<!-- 비회원, 일반 회원, 사업자 회원 - 소매 -->
+	<c:if test="${usercode != 35}">
+		<div>
+			<ul>
+				<li>주문 번호</li>
+				<li>상품 정보</li>
+				<li>옵션</li>
+				<li>판매가</li>
+				<li>수량</li>
+			</ul>
+			
+			<ul>
+				<li>
+					${cDTO.num}</li>
+				<li>
+					<!-- 이미지 처리 -->
+					<c:forTokens var="token" items="${cDTO.gimage}" delims="." varStatus="status">
+						<c:if test="${status.last}">
+							<c:choose>
+								<c:when test="${token eq 'jpg' || token eq 'gif' || token eq 'png' || token eq 'bmp'}">
+									<img src="images/${cDTO.gimage}" border="0" width="80" alt="상품 이미지" />
+								</c:when>
+								<c:otherwise>
+									<img src="images/${cDTO.gimage}.jpg" border="0" width="80" alt="상품 이미지" />
+								</c:otherwise>
+							</c:choose>
+						</c:if>
+					</c:forTokens>
+					<span style="margin-left:20px;">
+						${cDTO.gname}
+					</span>
+				</li>
+				<li>
+					${cDTO.vcategory}
+				</li>
+				<li id="price">
+					${cDTO.gprice}
+				</li>
+				<li>
+					<input type="text" id="gamount" name="gamount" value="${cDTO.gamount}" size="2">
+				</li>
+			</ul>
+		</div>
+	</c:if>
 	
-	<input type="submit" value="상품 구매">
+	<div><ul><li><hr></li></ul></div>	<!-- 구분선 -->
+	
+	<div>
+		<ul>
+			<li>
+				총 결제 금액: <span id="totalPrice"></span>원
+			</li>
+		</ul>
+	</div>
+	<br>
+	
+	
+	<div><ul><li>배송지 정보</li></ul></div>
+	
+	<c:if test="${not empty login}">	<!-- 로그인되어있을 때 -->
+		<!-- 유저 정보에서 가져온 배송지 -->
+		<div>
+			<ul>
+				<li>이름</li>
+				<li>
+					<input type="text" size="6" value="${login.username}" readonly>
+				</li>
+				
+				<li>주소</li>
+				<li>
+					<input type="text" class="userAddress" size="5" maxlength="5" value="${login.post}" readonly>
+					<!-- <input type="button" onclick="" value="우편번호 찾기"> -->
+					<br>
+					<input type="text" class="userAddress" value="${login.addr1}" readonly>
+					<input type="text" class="userAddress" value="${login.addr2}" readonly>
+					<!-- <span id="guide" style="color:#999"></span> -->
+				</li>
+				
+				<li>전화번호</li>
+				<li>
+					<input type="text" class="userPhone" size="3" maxlength="3" value="0${login.phone1}" readonly>
+					-
+					<input type="text" class="userPhone" size="4" maxlength="4" value="${login.phone2}" readonly>
+					-
+					<input type="text" class="userPhone" size="4" maxlength="4" value="${login.phone3}" readonly>
+				</li>
+			</ul>
+		</div>
+	
+		<!-- 유저 정보와 동일한 배송지 및 연락처 사용하기 -->
+		<div>
+			<ul>
+				<li>
+					<input type="checkbox" id="same1"> 계정에 저장된 배송지를 사용합니다.<br>
+					<input type="checkbox" id="same2"> 계정에 저장된 연락처를 사용합니다.
+				</li>
+			</ul>
+		</div>
+	</c:if>
+	
+	<!-- 새로 입력할 배송지 -->
+	<div>
+		<ul>
+			<li>수취인</li>
+			<li>
+				<input type="text" id="ordername" class="inputName" name="ordername" size="6">
+			</li>
+			
+			<li>배송지</li>
+			<li>
+				<input type="text" name="post" id="sample4_postcode" class="inputPlace" placeholder="우편번호" size="5" maxlength="5" value="${userInfo.post}">
+				<input type="button" id="postBtn" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
+				<input type="text" name="addr1" id="sample4_roadAddress" class="inputPlace" placeholder="도로명주소" value="${userInfo.addr1}">
+				<input type="text" name="addr2" id="sample4_jibunAddress" class="inputPlace" placeholder="지번주소" value="${userInfo.addr2}">
+				<span id="guide" style="color:#999"></span>
+			</li>
+			
+			<li>연락처</li>
+			<li>
+				<select name="phone1" id="phone1" class="inputPhone">
+					<option value="010" <c:if test="${userInfo.phone1 == 010}">selected="selected"</c:if>>010</option>
+					<option value="011" <c:if test="${userInfo.phone1 == 011}">selected="selected"</c:if>>011</option>
+				</select>
+				-
+				<input type="text" name="phone2" id="phone2" class="inputPhone" size="4" maxlength="4" value="${userInfo.phone2}">
+				-
+				<input type="text" name="phone3" id="phone3" class="inputPhone" size="4" maxlength="4" value="${userInfo.phone3}">
+			</li>
+		</ul>
+	</div>
+	<br>
+	
+	
+	<div><ul><li>결제 수단</li></ul></div>
+	
+	<div>
+		<ul>
+			<li>
+				<input type="radio" name="paymethod" value="신용카드" checked="checked">신용카드
+			</li>
+			<li>
+				<input type="radio" name="paymethod" value="계좌이체">계좌이체
+			</li>
+			<li>
+				<input type="radio" name="paymethod" value="무통장입금">무통장입금
+			</li>
+			<li>
+				<input type="radio" name="paymethod" value="카카오페이">카카오페이
+			</li>
+		</ul>
+	</div>
+	<br>
+	
+	<div>
+		<ul>
+			<li>
+				<input type="submit" value="상품 구매">
+			</li>
+		</ul>
+	</div>
 </form>
 
 <!-- 주소 검색 - 다음 API -->
