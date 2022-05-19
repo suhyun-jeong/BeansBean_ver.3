@@ -1,0 +1,99 @@
+@charset "UTF-8";
+
+/*-------- gnb ---------*/
+.gnb {width:1280px;
+	  background-color:#eeeeee;
+	  font-size:16px;
+	  font-weight:500;}
+.gnb_box {width:1280px;
+		  margin:0 auto;
+		  overflow:hidden;}
+			  
+.gnb_menu {height:30px;
+		   float:right;
+		   line-height:30px;}
+.gnb_menu * {float:left;}
+.gnb_menu *:hover {cursor:pointer;
+				   color:blue;}
+.gnb_menu span {margin-right:20px;}
+.gnb_menu a:hover {text-decoration:underline;}
+
+#span_user {font-size:12px;}
+#span_user2 {margin-right:10px;}
+
+
+/*-------- lnb ---------*/
+.lnb_box {width:1024px;
+	  	  font-size:18px; font-weight:500;
+	 	  margin:0 auto;}
+	  
+.lnb_menu {width:830px;
+		   margin-left:97px;
+		   float:left;}
+.lnb_menu li {background-color:#fcfbfa; color:#101010;}
+.lnb_menu>li {width:150px; height:50px; 
+			  line-height:50px;
+			  text-align:center;
+			  margin-right:20px;
+			  padding-bottom:6px;
+			  float:left;}
+.lnb_menu>a  {width:100px; height:50px; 
+			  line-height:50px;
+			  text-align:center;
+			  margin-right:22px;
+			  padding-bottom:6px;
+			  float:left;}
+.lnb_menu li:last-child {margin-right:0px;}
+.lnb_menu a:hover {cursor:pointer;
+				   color:blue;
+				   text-decoration:underline;}
+	
+				   
+#contents {width:1280px;
+		   background-color:#fcfbfa;
+		   overflow:hidden;}
+
+.main_visual {width:1280px; height:500px;
+			  cursor:pointer;
+			  margin-bottom:50px;}
+			  
+			  
+/*-----------footer bar-----------*/
+#footer {width:1280px;
+		 background-color:#fcfbfa;}
+
+
+/*-footer menu-*/
+.footer_border {width:1280px;
+				border-bottom:solid 1px #cbcbcb; box-sizing:border-box;}
+.foot_menu {width:660px;
+			margin:0 auto;
+			overflow:hidden;}
+.foot_menu li {width:100px; height:50px;
+			   text-align:center; line-height:50px;
+			   font-size:14px;
+			   font-weight:500;
+			   cursor:pointer;
+			   float:left;}
+.foot_menu .small {width:20px; height:50px;
+				   font-size:10px;}
+.foot_menu li:nth-child(7){width:130px;}
+.foot_menu li:last-child{width:150px;}
+
+.foot_bot {width:1024px;
+		   padding-top:30px;
+		   margin:0 auto;
+		   overflow:hidden;}
+		   
+.foot_logo {width:220px; height:31px;
+			float:left;}
+			
+.copyright {margin-left:120px;
+			float:left;}
+.copyright li{width:450px; height:18px;
+			  font-size:12px;
+			  line-height:18px;}
+.copyright li span {font-weight:500;}
+.copyright li:last-child {height:50px;
+						  line-height:50px;
+						  font-weight:500;}
