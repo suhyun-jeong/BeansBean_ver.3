@@ -89,87 +89,49 @@
 	});
 </script>
 
-<!-- <script type="text/javascript">
-	$(function() {
-		
-		$("#userid").keyup(function() {
-			$.ajax({
-				url:"idDuplicateCheck",
-				type: "get",
-				data: {id : $("#userid").val()}, //json => 문자열
-				dataType: "text",
-				success: function (data,status,xhr) {
-					/* console.log(data); */
-					$("#result").text(data);
-				},
-				error: function(xhr,status,error) {
-					console.log(error);
-				}
-			});//end ajax
-		});//end keyup
-		
-	});//end ready
-
-</script> -->
 <form action="memberAdd" method="get">
-
-*아이디: <input type="text" name="userid" id="userid"> <button id="idDuplicateCheck">중복확인</button>
-<span id="idCheckResult" style="margin-left:10px; font-size:12px; cursor:default;"></span>
-<br> 
-*비밀번호: <input type="text" name="passwd" id="passwd"><br> 
+<div>
+<ul>
+<li>*아이디: <span><input type="text" name="userid" id="userid"></span> <button id="idDuplicateCheck">중복확인</button>
+<span id="idCheckResult" style="margin-left:10px; font-size:12px; cursor:default;"></span> </li>
+<li>*비밀번호: <span><input type="text" name="passwd" id="passwd"></span></li> 
 <!-- 비빌번호확인:<input type="text" name="passwd2" id="passwd2">
 <span id="result2"></span> 
 <br> -->
-이름: <input type="text" name="username" size="6"><br> 
-유저코드: 
+<li>이름: <span><input type="text" name="username" size="6"></span></li>
+<li>유저코드: 
 <input type="radio" class="usercode" name="usercode" value="20" checked="checked">일반 회원
-<input type="radio" class="usercode" name="usercode" value="30">사업자 회원<br>
+<input type="radio" class="usercode" name="usercode" value="30">사업자 회원</li>
+<li>
 <input type="text" name="post" id="sample4_postcode" placeholder="우편번호" size="5" maxlength="5">
-
-*아이디:<input type="text" name="userid" id="userid">
-<span id="result"></span>
-<br> 
-*비밀번호:<input type="text" name="passwd" id="passwd"><br> 
-<!-- 비빌번호확인:<input type="text" name="passwd2" id="passwd2">
-<span id="result2"></span> 
-<br> -->
-이름:<input type="text" name="username"><br> 
-유져코드 :<input type="text" name="usercode"><br>
-<input type="text" name="post" id="sample4_postcode" placeholder="우편번호">
-
-<input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
-<input type="text" name="addr1" id="sample4_roadAddress" placeholder="도로명주소">
+<input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"></li>
+<li><input type="text" name="addr1" id="sample4_roadAddress" placeholder="도로명주소">
 <input type="text" name="addr2" id="sample4_jibunAddress" placeholder="지번주소">
 <span id="guide" style="color:#999"></span>
-<br>
+<li>
 
+<li>
 전화번호: <select name="phone1">
   <option value="010">010</option>
   <option value="011">011</option>
 </select>-
 <input type="text" name="phone2" size="4" maxlength="4">-<input type="text" name="phone3" size="4" maxlength="4">
-<br>
-이메일: <input type="text" name="email1" id="email1">@
-       <input type="text" name="email2" id="email2" placeholder="직접 입력">
-       <select  id="emailSelect">
-       	<option selected>직접 입력</option>
-       </select>
-전화번호:<select name="phone1">
-  <option value="010">010</option>
-  <option value="011">011</option>
-</select>-
-<input type="text" name="phone2" >-<input type="text" name="phone3" >
-<br>
+</li>
+
+<li>
 이메일:<input type="text" name="email1" id="email1">@
        <input type="text" name="email2" id="email2" placeholder="직접입력">
        <select  id="emailSelect">
-
         <option value="daum.net">daum.net</option>
         <option value="naver.com">naver.com</option>
        </select>
-<br>
+</li>
+<li>
 <input type="submit" value="회원가입">
 <input type="reset" value="다시입력" >
+</li>
+</ul>
+</div>
 </form>
 <hr>
 <button id="cancel">취소</button>

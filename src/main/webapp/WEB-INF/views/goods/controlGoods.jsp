@@ -52,8 +52,6 @@
    
 <c:forEach var="dto" items="${AllGoods}" varStatus="status">	
 	<tr id="${dto.gcode}">
-	<td><img src="images/${dto.gimage}" border="0" align="center" width="100"></td>
-
 	<c:forTokens var="token" items="${dto.gimage}" delims="." varStatus="status2">
 		<c:if test="${status2.last}">
 			<%-- ${token}, ${dto.gimage} --%>

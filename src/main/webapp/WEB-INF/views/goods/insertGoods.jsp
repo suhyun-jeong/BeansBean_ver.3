@@ -2,6 +2,11 @@
     pageEncoding="UTF-8"%>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
 </script>
+<style>
+	li {list-style: none;
+		padding: 5px;}
+	span {padding-right: 30px;}
+</style>
 <script type="text/javascript">
 	$(function() {
 		$("#image").change(function() {//gimage 변경
@@ -28,7 +33,7 @@
 			 if ($("#Variation").children("#emptyVariation").length != 0) {	
 				$("#Variation").children("#emptyVariation").remove();
 			}
-			$("#Variation").append("<div class='VRI'>종류:<input type='text' name='vcategory'></div>");
+			$("#Variation").append("<li class='VRI'>종류:<span><input type='text' name='vcategory'></span></li>");
 		}); //vADD end
 			
 		 $("#bADD").click(function() {//번들 input 추가
@@ -36,7 +41,7 @@
 			if ($("#Bundle").children("#emptyBundle").length != 0) {	
 				$("#Bundle").children("#emptyBundle").remove();
 			}
-			$("#Bundle").append("<div class='BUD'>번들:<input type='text' name='bcategory'> 번들가격:<input type='text' name='bprice'><br></div>");
+			$("#Bundle").append("<li class='BUD'>번들:<span><input type='text' name='bcategory'></span> 번들가격:<span><input type='text' name='bprice'></span></li>");
 			}); //bADD end
 		
 	
@@ -59,15 +64,15 @@
 		$("#vDEL").click(function() {
 			event.preventDefault();
 			$("#Variation").children(".VRI").last().remove();
-			if ($("#Variation").children(".VRI").length == 0) {	
-				$("#Variation").append("<span id='emptyVariation'>종류없음</span>");
+			if ($("#Variation").children(".VRI").length == 0 && $("#Variation").children("#emptyVariation").length == 0) {	
+				$("#Variation").append("<li id='emptyVariation'>종류없음</li>");
 			}
 		});
 		$("#bDEL").click(function() {
 			event.preventDefault();
 			$("#Bundle").children(".BUD").last().remove();
-			if ($("#Bundle").children(".BUD").length == 0) {	
-				$("#Bundle").append("<span id='emptyBundle'>번들없음</span>");
+			if ($("#Bundle").children(".BUD").length == 0 && $("#Bundle").children("#emptyBundle").length == 0) {	
+				$("#Bundle").append("<li id='emptyBundle'>번들없음</li>");
 			}
 		});
 		
@@ -163,7 +168,7 @@
 			$.ajax({
 				url:"insertBundle",
 				type: "get",
-				async:false,
+				async:false,	//비동기처리
 				data: {gcode: gcode, bcategory : bcategory, bprice: bprice }, 
 				dataType: "text"
 			});//end ajax
@@ -171,42 +176,51 @@
 	}//insertBundle end
 
 </script>
-
-제품이미지: <input type="file" name="file" id="image"><br>
+<div>
+<ul>
+<li>제품이미지: <span><input type="file" name="file" id="image"> </span></li>
+</ul>
+</div>
 <hr>
 
 <form id="goodsForm">
 <input type="hidden" name="gimage" id="gimage" value="null">
-제품코드:<input type="text" name="gcode" id="gcode">
-<span id="result"></span>
-<br> 
+<div>
+<ul>
+<li>제품코드:<span><input type="text" name="gcode" id="gcode"></span>
+<span id="result"></span></li>
 
+<li>
 제품카테고리:
 	<label><input type="radio" name="gcategory" value="beverage" checked> beverage</label>
 	<label><input type="radio" name="gcategory" value="coffee"> coffee</label>
-    <label><input type="radio" name="gcategory" value="liquid"> liquid</label><br> 
-제품 이름:<input type="text" name="gname" id="gname"><br> 
-제품단일 가격 :<input type="text" name="gprice" id="gprice"><br>
-제품 재고:<input type="text" name="gamount" id="gamount"><br>
+    <label><input type="radio" name="gcategory" value="liquid"> liquid</label> </li>
+<li>제품 이름:<span><input type="text" name="gname" id="gname"></span> </li>
+<li>제품단일 가격 :<span><input type="text" name="gprice" id="gprice"></span> </li>
+<li>제품 재고:<span><input type="text" name="gamount" id="gamount"></span></li>
 
-
+<li>
 <div id="Variation">
 	<span id="emptyVariation">종류없음</span>
 </div>
 <button id="vADD" >종류추가</button>
 <button id="vDEL">종류삭제</button><br>
+</li>
 
+<li>
 <div id="Bundle">
 <span id="emptyBundle">번들없음</span>
 </div>
 <button id="bADD">번들추가</button>
 <button id="bDEL">번들삭제</button><br>
-
-<input type="reset" value="취소"><br>
+</li>
+<li> <input type="reset" value="취소"><br> </li>
+</ul>
+</div>
 </form>
 <hr>
 
 
 
-<button id="submitBtn">등록</button>
+<li><button id="submitBtn">등록</button></li>
 
