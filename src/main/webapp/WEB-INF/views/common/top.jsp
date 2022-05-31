@@ -15,6 +15,11 @@
 				<span><a href="logout">로그아웃</a></span>
 				<span><a href="mypage">마이페이지</a></span>
 				<span><a href="loginCheck/cartList">장바구니</a></span>
+				<c:if test="${login.usercode == 10}">
+					<!-- 관리자 페이지 -->
+					<span><a href="ManagerCheck/CtrlGoods">상품 관리</a></span>
+					<span><a href="ManagerCheck/goodsinsert">상품 등록</a></span>
+				</c:if>
 			</ul>
 		</div>
 	</nav>

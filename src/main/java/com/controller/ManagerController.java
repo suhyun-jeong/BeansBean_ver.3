@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 import com.dto.BundleDTO;
 import com.dto.GoodsDTO;
@@ -31,19 +33,20 @@ public class ManagerController {
 	@Autowired
 	ManagerService service;
 	
-
+	@RequestMapping(value = "/ManagerCheck/goodsinsert")
+	public String goodsinsert() {
+		return "redirect:../goodsinsert";
+	}
 	
-	@RequestMapping(value = "/CtrlGoods")
-	public ModelAndView controlGoods() {
+	@RequestMapping(value = "/ManagerCheck/CtrlGoods")
+	public String controlGoods(RedirectAttributes attr) {
 		List<GoodsDTO> list = service.AllGoods();
 		List<VariationDTO> vlist = service.selectVariation();
 		List<BundleDTO> blist = service.selectBundle();
-		ModelAndView model = new ModelAndView();
-		model.addObject("AllGoods",list);
-		model.addObject("vlist",vlist);
-		model.addObject("blist",blist);
-		model.setViewName("controlGoods");
-		return model;
+		attr.addFlashAttribute("AllGoods", list);
+		attr.addFlashAttribute("vlist", vlist);
+		attr.addFlashAttribute("blist", blist);
+		return "redirect:../controlGoods";
 	}
 	
 	@ResponseBody	//제품 수정
