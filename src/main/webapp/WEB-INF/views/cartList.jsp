@@ -6,7 +6,7 @@
 <link href="css/init.css" rel="stylesheet">
 <link href="css/main.css" rel="stylesheet">
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>장바구니</title>
 </head>
 <body>
 	<header id="header">

@@ -73,6 +73,11 @@
 				//cart 클릭이벤트
 				$("#cart").on("click", function() {
 					$("form").attr("action", "loginCheck/cartAdd");
+					var answer;
+					answer = confirm("상품을 장바구니에 담았습니다. 장바구니로 이동하시겠습니까?");
+					if(answer == true){
+						location = "loginCheck/cartAdd"
+					}
 				});//end clickevent
 				
 				
@@ -80,12 +85,14 @@
 				$("#orderBtn").click(function() {
 					$("form").attr("action", "orderForm");
 				});
+				
 		});//end ready
+		
+		
 		
 </script>
 
-
-
+	
 
 ${goodsDetail}
 <FORM name="goodDetailForm" method="GET" action="#"><!--action을 막음 --><!-- hidden data -->
