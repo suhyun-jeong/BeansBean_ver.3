@@ -24,9 +24,46 @@
 					var price = $(this).children("option:selected").attr("data-xxx");
 					var amount = $("#gamount").val();
 					$("input[name=gprice]").val(price);
-					$("#chagePrice").text(price*amount+"원");
-					
+					console.log(price);
+					$("#changePrice").text(price*amount+"원");
 				});
+				
+				$("#up").on("click", function() {
+					var count = $("#gamount").val();
+					var price = $("#oneprice").text();
+					
+					result = parseInt(count)+1;
+					total = parseInt(price*result);
+					
+					$("#gamount").val(result);
+					$("#changePrice").text(total + "원");
+					
+				});//up
+				
+				
+				$("#down").click(function() {
+					var count = $("#gamount").val();
+					var price = $("#oneprice").text();
+					var sum = $("#changePrice").val();
+					
+					if (count != 1){
+						result = parseInt(count)-1;
+						total = parseInt(price*result);
+					}			
+					
+					$("#gamount").val(result);
+					//$("#changePrice").text(total);
+					
+				})//down 
+				
+				
+				/* 
+				$(".vcategory").click(function() {
+					var price = $("#selprice").text();
+					var amount = $("#gamount").val();
+					console.log(price);
+					$("#changePrice").text(price*amount+"원");
+				}); */
 				
 				//bundle 값, option에 push		
 				$.ajax({
@@ -98,8 +135,8 @@ ${goodsDetail}
 <FORM name="goodDetailForm" method="GET" action="#"><!--action을 막음 --><!-- hidden data -->
 	    <input type="hidden" name="gimage" value="${goodsDetail.gimage}"> 
 	    <input type="hidden" name="gcode" value="${goodsDetail.gcode}">
-	     <input	type="hidden" name="gname" value="${goodsDetail.gname}"> 
-	     <input	type="hidden" name="gprice" value="${goodsDetail.gprice}">
+	    <input type="hidden" name="gname" value="${goodsDetail.gname}"> 
+	    <input type="hidden" name="gprice" value="${goodsDetail.gprice}">
 
 
 <% 
@@ -141,8 +178,8 @@ ${goodsDetail.gname}
 								${goodsDetail.gcode }
 							</li> --%>
 
-							<li class="td_title"><span>상품명</span><span>${goodsDetail.gname}</span></li>
-							<li class="td_title"><span>단품 가격</span><span style="color: red; font-weight: bolder;" >${goodsDetail.gprice}</span></li>
+							<li><span>상품명</span><span>${goodsDetail.gname}</span></li>
+							<li><span>단품 가격</span><span style="color: red; font-weight: bolder;" id="oneprice" >${goodsDetail.gprice}</span></li>
 
 							<li class="td_red" style='padding-left: 30px'>
 								
@@ -153,12 +190,11 @@ ${goodsDetail.gname}
 							
 							<!-- 회원일 때 10(관리자)/20(일반)/30(사업자) -->
 							<c:if test="${not empty login}">
-							<c:choose>
-								
+							<c:choose>	
 								<c:when test="${login.usercode eq '20'}">
 									<!-- vcategory -->
 									<li style='padding-left: 30px'>
-									<select	class="select_change" name="vcategory" id="vcategory" style="width: 300px">
+									<select	class="vactegory" name="vcategory" id="vcategory" style="width: 300px">
 											<option selected>variation</option>
 											
 									</select></li>
@@ -166,7 +202,7 @@ ${goodsDetail.gname}
 								<c:otherwise>
 									<!-- vcategory -->
 									<li style='padding-left: 30px'>
-									<select	class="select_change" name="vcategory" id="vcategory" style="width: 300px">
+									<select	class="vactegory" name="vcategory" id="vcategory" style="width: 300px">
 											<option selected>variation</option>
 											
 									</select></li>
@@ -185,7 +221,7 @@ ${goodsDetail.gname}
 							<c:if test="${empty login}">
 								<!-- vcategory -->
 								<li style='padding-left: 30px'>
-								<select	class="select_change" name="vcategory" id="vcategory" style="width: 300px">
+								<select	class="vactegory" name="vcategory" id="vcategory" style="width: 300px">
 										<option selected>variation</option>
 											
 								</select></li>
@@ -197,7 +233,7 @@ ${goodsDetail.gname}
 								src="images/up.png" id="up" > <img src="images/down.png"
 								id="down" ></span>
 							
-							<li class="td_title"><span>최종 가격</span><span style="color: red; font-weight: bolder;" id="chagePrice">${goodsDetail.gprice}원</span></li>
+							<li class="td_title"><span>최종 가격</span><span style="color: red; font-weight: bolder;" id="changePrice">${goodsDetail.gprice}원</span></li>
 						</ul>
 					</div>
 
