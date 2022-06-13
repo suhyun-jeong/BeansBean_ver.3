@@ -153,7 +153,7 @@
 제품이미지: <input type="file" name="file" id="image" ><br>
 <hr>
 
-<form id="goodsForm" action="CtrlGoods" >
+<form id="goodsForm" action="ManagerCheck/CtrlGoods" >
 <input type="hidden" name="gcode" value="${gdto.gcode}">
 <input type="hidden" name="gimage" id="gimage" value="${gdto.gimage}">
 이미지명: <input type="text" id="fakeImage" value="${gdto.gimage}" disabled="disabled"><br>
