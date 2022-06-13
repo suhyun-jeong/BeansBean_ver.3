@@ -14,6 +14,7 @@
 
 <!-- <mvc:view-controller path="/" view-name="main"/>  --><!-- /요청 main.jsp => controller에 생성 -->
 <mvc:view-controller path="/goodsinsert" view-name="insertGoods"/>
+<mvc:view-controller path="/controlGoods" view-name="controlGoods"/>
 <mvc:view-controller path="/afterInsert" view-name="afterInsert"/>
 <mvc:view-controller path="/memberForm" view-name="memberForm"/>
 <mvc:view-controller view-name="login" path="/loginForm"/>	<!-- /login 요청 시 login.jsp로 이동 -->
@@ -33,8 +34,13 @@
 		<mvc:mapping path="/loginCheck/**"/>
 		<ref bean="loginCheckInterceptor"/>
 	</mvc:interceptor>
+	<mvc:interceptor>
+		<mvc:mapping path="/ManagerCheck/**"/>
+		<ref bean="ManagerCheckInterceptor"/>
+	</mvc:interceptor>
 </mvc:interceptors>
 <bean id="loginCheckInterceptor" class="com.interceptor.LoginCheckInterceptor"></bean>
+<bean id="ManagerCheckInterceptor" class="com.interceptor.ManagerCheckInterceptor"></bean>
 
 
 <!-- el, jstl 태그 디펜던시 추가 없이 사용 가능 -->

@@ -88,118 +88,90 @@ $(function() {
 });//end ready
  
 </script>
-	${cartList}
-<table width="90%" cellspacing="0" cellpadding="0" border="0">
 
-	<tr>
-		<td height="30">
-	</tr>
+ 	<div style = height:100px; align="center"> 
+		<font size="6"><b>- 장바구니-</b></font>
+			<hr size="2" color="CCCCCC">	
+	</div>
 
-	<tr>
-		<td colspan="5" class="td_default">&nbsp;&nbsp;&nbsp; <font
-			size="5"><b>- 장바구니-</b></font> &nbsp;
-		</td>
-	</tr>
-
-	<tr>
-		<td height="15">
-	</tr>
-
-	<tr>
-		<td colspan="10">
-			<hr size="1" color="CCCCCC">
-		</td>
-	</tr>
-
-	<tr>
-		<td height="7">
-	</tr>
-
-	<tr>
-		<td class="td_default" align="center"><input type="checkbox"
-			name="allCheck" id="allCheck"> <strong>전체선택</strong></td>
-		<td class="td_default" align="center"><strong>주문번호</strong></td>
-		<td class="td_default" align="center" colspan="2"><strong>상품정보</strong></td>
-		<td class="td_default" align="center"><strong>판매가</strong></td>
-		<td class="td_default" align="center" colspan="2"><strong>수량</strong></td>
-		<td class="td_default" align="center"><strong>합계</strong></td>
-		<td></td>
-	</tr>
-
-	<tr>
-		<td height="7">
-	</tr>
-
-
-
-	<tr>
-		<td colspan="10">
-			<hr size="1" color="CCCCCC">
-		</td>
-	</tr>
-
-
-
+	 <div style = height:50px; >
+		<span><input type="checkbox" name="allCheck" id="allCheck"> <strong>전체선택</strong></span>	
+		<span><strong>주문번호</strong></span>
+		<span><strong>상품정보</strong></span>
+		<span><strong>판매가</strong></span>
+		<span><strong>수량</strong></span>
+		<span><strong>합계</strong></span>			
+		<hr>	
+	</div> 
+	
+	
+	<div>
 	<form name="myForm">
-
-
-		<!-- 반복시작 -->
-		<c:forEach var="x" items="${cartList}">
-			<tr>
-				<td class="td_default" width="80">
-					<!-- checkbox는 체크된 값만 서블릿으로 넘어간다. 
-			따라서 value에 삭제할 num값을 설정한다. --> <input type="checkbox" name="check"
+		<ul>
+			<c:forEach var="x" items="${cartList}">
+		
+				<li class="td_default" width="80">
+				 <input type="checkbox" name="check"
 					id="check81" class="check" value="${x.num}">
-				</td>
-				<td class="td_default" width="80">${x.num}</td>
-				<td class="td_default" width="80"><img
-					src="../images/${x.gimage}.jpg" border="0" align="center"
-					width="80" /></td>
-				<td class="td_default" width="300" style='padding-left: 30px'>
+				
+		
+				
+				 <li class="td_default" width="80">${x.num}</li> 
+				<li class="td_default" width="80"><img
+					src="../images/${x.gimage}.jpg" border="0"  align="center" width="80" /></li>
+				<li class="td_default" width="300" style='padding-left: 30px'>
 					${x.gname} <br> <font size="2" color="#665b5f">[옵션 :
 						소매옵션(${x.vcategory}) , 도매옵션(${x.bcategory})] </font>
-				</td>
-				<td class="td_default" align="center" width="110"><span
-					id="gPrice${x.num}">${x.gprice}</span></td>
-				<td class="td_default" align="center" width="90"><input
+				</li>
+				
+				<li class="td_default" align="center" width="110"><span
+					id="gPrice${x.num}">${x.gprice}</span></li>
+					
+				<li class="td_default" align="center" width="90">
+				<input
 					class="input_default" type="text" name="cartAmount"
 					id="cartAmount${x.num}" style="text-align: right" maxlength="3"
-					size="2" value="${x.gamount}"></input></td>
-				<td><input type="button" value="수정" class="updateBtn"
-					data-num="${x.num}" data-price="${x.gprice}" /></td>
-				<td class="td_default" align="center" width="80"
+					size="2" value="${x.gamount}"></input>
+					</li>
+					
+				<li><input type="button" value="수정" class="updateBtn"
+					data-num="${x.num}" data-price="${x.gprice}" ></li>
+					
+				<li class="td_default" align="center" width="80"
 					style='padding-left: 5px'><span id="sum${x.num}" class="sum">
-						${x.gprice * x.gamount} </span></td>
-				<td><input type="button" value="주문" class="orderBtn"
-					data-num="${x.num}"></td>
-				<td class="td_default" align="center" width="30"
+						${x.gprice * x.gamount} </span></li>
+						
+				<li><input type="button" value="주문" class="orderBtn"
+					data-num="${x.num}"></li>
+					
+				<li class="td_default" align="center" width="30"
 					style='padding-left: 10px'><input type="button" value="삭제"
-					class="deleteBtn" data-num="${x.num }"></td>
-				<td height="10"></td>
-			</tr>
+					class="deleteBtn" data-num="${x.num }"></li>
+				<li height="10"></li>
+				<hr>
+				</c:forEach>
+				
+				
+			</ul>
 
-			<!-- 반복끝 -->
-		</c:forEach>
+		
+		
 	</form>
-	<tr>
-		<td colspan="10">총합 : <span id="totalSum"></span>
-			<hr size="1" color="CCCCCC">
-		</td>
-	</tr>
-	<tr>
-		<td height="30">
-	</tr>
+	</div>
+	
+		<div style="display">
+		<hr size="1" color="CCCCCC">
+		총합 : <span id="totalSum"></span>
+		<hr size="1" color="CCCCCC">
+		</div>
+	
+	
 
-	<tr>
-		<td align="center" colspan="5"><a class="a_black"
-			href="javascript:orderAllConfirm(myForm)"> 전체 주문하기 </a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<div style = height:10px;>
 			<button onclick="orderAllConfirm(myForm)">전체 주문하기</button>
-			<button id="delAllCart">전체 삭제하기</button> <a class="a_black"
-			href="goodsList?gCategory=top"> 계속 쇼핑하기 </a>&nbsp;&nbsp;&nbsp;&nbsp;
-		</td>
-	</tr>
-	<tr>
-		<td height="20">
-	</tr>
+			<button id="delAllCart">전체 삭제하기</button> 
+		</div>
+	
 
-</table>
+
+		
