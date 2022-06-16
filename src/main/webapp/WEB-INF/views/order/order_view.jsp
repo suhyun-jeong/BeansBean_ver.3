@@ -7,7 +7,70 @@
 
 <%@ page import="com.dto.CartDTO" %>
 
+<style type="text/css">
+	div {
+		clear: both;
+	}
+
+	ul {
+		clear: both;
+		list-style: none;
+	}
+	li {
+		float: left;
+		margin: 0 10px;
+	}
+	
+	.goodsInfo li {
+		float: left;
+		margin: 10px 5px;
+		
+		text-align: center;
+		width: 100px;
+	}
+</style>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- 회원/비회원 및 도/소매 여부 체크 -->
+<%
+	int usercode = 0;	// 0: 비회원, 20: 일반 회원, 30: 사업자-소매, 35: 사업자-도매
+	boolean bundle = false;	// false: 소매, true: 도매
+
+	// 로그인 여부
+	if (session.getAttribute("login") != null) {
+		usercode = 20;
+	
+		// 사업자 회원의 도/소매 여부
+		CartDTO cDTO = (CartDTO) request.getAttribute("cDTO");
+		if (!cDTO.getBcategory().equals("소매품")) {
+			if (!cDTO.getBcategory().contains("단품")) {	// 도매
+				bundle = true;
+				usercode = 35;
+			} else	// 소매
+				usercode = 30;
+		}
+	}
+%>
+<c:set var="usercode" value="<%= usercode %>" />
+<c:set var="bundle" value="<%= bundle %>" />
+
+<%-- 
+<c:choose>
+	<c:when test="${usercode == 0}">
+		<p>비회원</p>
+	</c:when>
+	<c:when test="${usercode == 20}">
+		<p>일반 회원</p>
+	</c:when>
+	<c:when test="${usercode == 30}">
+		<p>사업자 회원 - 소매</p>
+	</c:when>
+	<c:when test="${usercode == 35}">
+		<p>사업자 회원 - 도매</p>
+	</c:when>
+</c:choose>
+ --%>
 
 <script type="text/javascript">
 	$(function() {
@@ -16,6 +79,7 @@
 		var gAmount = parseInt($("#gamount").val());	// 상품 수량
 		var bundleInt = 1;	// 번들 수량 기본값 1
 
+		console.log(bCategory)
 		
 		// 번들에서 숫자 및 단위 추출
 		if (bCategory != "" && !bCategory.startsWith("단품")) {	// 도매 품목일 경우
@@ -122,45 +186,6 @@
 	});
 </script>
 
-<!-- 회원/비회원 및 도/소매 여부 체크 -->
-<%
-	int usercode = 0;	// 0: 비회원, 20: 일반 회원, 30: 사업자-소매, 35: 사업자-도매
-
-	// 로그인 여부
-	if (session.getAttribute("login") != null)
-		usercode = 20;
-
-	// 사업자 회원의 도/소매 여부
-	boolean bundle = false;	// false: 소매, true: 도매
-	CartDTO cDTO = (CartDTO) request.getAttribute("cDTO");
-	if (cDTO.getBcategory() != null && !(cDTO.getBcategory().length() < 1)) {
-		if (!cDTO.getBcategory().contains("단품")) {	// 도매
-			bundle = true;
-			usercode = 35;
-		} else	// 소매
-			usercode = 30;
-	}
-%>
-<c:set var="usercode" value="<%= usercode %>" />
-<c:set var="bundle" value="<%= bundle %>" />
-
-<!-- 
-<c:choose>
-	<c:when test="${usercode == 0}">
-		<p>비회원</p>
-	</c:when>
-	<c:when test="${usercode == 20}">
-		<p>일반 회원</p>
-	</c:when>
-	<c:when test="${usercode == 30}">
-		<p>사업자 회원 - 소매</p>
-	</c:when>
-	<c:when test="${usercode == 35}">
-		<p>사업자 회원 - 도매</p>
-	</c:when>
-</c:choose>
- -->
-
 <form action="oneGoodsOrder" method="post">
 	<!-- hidden data -->
 	<input type="hidden" name="num" value="${cDTO.num}">
@@ -180,10 +205,10 @@
 	
 	<!-- 사업자 회원 - 도매 -->
 	<c:if test="${usercode == 35}">
-		<div>
+		<div class="goodsInfo">
 			<ul>
 				<li>주문 번호</li>
-				<li>상품 정보</li>
+				<li style="width:300px;">상품 정보</li>
 				<li>번들</li>
 				<li>옵션</li>
 				<li>판매가</li>
@@ -195,7 +220,7 @@
 				<li>
 					${cDTO.num}
 				</li>
-				<li>
+				<li style="display:flex;align-items:center;width:300px;">
 					<!-- 이미지 처리 -->
 					<c:forTokens var="token" items="${cDTO.gimage}" delims="." varStatus="status">
 						<c:if test="${status.last}">
@@ -235,10 +260,10 @@
 	
 	<!-- 비회원, 일반 회원, 사업자 회원 - 소매 -->
 	<c:if test="${usercode != 35}">
-		<div>
+		<div class="goodsInfo">
 			<ul>
 				<li>주문 번호</li>
-				<li>상품 정보</li>
+				<li style="width:300px;">상품 정보</li>
 				<li>옵션</li>
 				<li>판매가</li>
 				<li>수량</li>
@@ -247,7 +272,7 @@
 			<ul>
 				<li>
 					${cDTO.num}</li>
-				<li>
+				<li style="display:flex;align-items:center;width:300px;">
 					<!-- 이미지 처리 -->
 					<c:forTokens var="token" items="${cDTO.gimage}" delims="." varStatus="status">
 						<c:if test="${status.last}">
@@ -300,7 +325,9 @@
 				<li>
 					<input type="text" size="6" value="${login.username}" readonly>
 				</li>
+			</ul>
 				
+			<ul>
 				<li>주소</li>
 				<li>
 					<input type="text" class="userAddress" size="5" maxlength="5" value="${login.post}" readonly>
@@ -310,7 +337,9 @@
 					<input type="text" class="userAddress" value="${login.addr2}" readonly>
 					<!-- <span id="guide" style="color:#999"></span> -->
 				</li>
+			</ul>
 				
+			<ul>	
 				<li>전화번호</li>
 				<li>
 					<input type="text" class="userPhone" size="3" maxlength="3" value="0${login.phone1}" readonly>
@@ -323,7 +352,7 @@
 		</div>
 	
 		<!-- 유저 정보와 동일한 배송지 및 연락처 사용하기 -->
-		<div>
+		<div style="margin:0 50px;">
 			<ul>
 				<li>
 					<input type="checkbox" id="same1"> 계정에 저장된 배송지를 사용합니다.<br>
@@ -340,7 +369,9 @@
 			<li>
 				<input type="text" id="ordername" class="inputName" name="ordername" size="6">
 			</li>
-			
+		</ul>
+				
+		<ul>
 			<li>배송지</li>
 			<li>
 				<input type="text" name="post" id="sample4_postcode" class="inputPlace" placeholder="우편번호" size="5" maxlength="5" value="${userInfo.post}">
@@ -349,7 +380,9 @@
 				<input type="text" name="addr2" id="sample4_jibunAddress" class="inputPlace" placeholder="지번주소" value="${userInfo.addr2}">
 				<span id="guide" style="color:#999"></span>
 			</li>
-			
+		</ul>
+				
+		<ul>
 			<li>연락처</li>
 			<li>
 				<select name="phone1" id="phone1" class="inputPhone">

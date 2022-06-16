@@ -33,20 +33,21 @@ public class OrderController {
 	public ModelAndView orderForm(HttpSession session, CartDTO cDTO) {
 		MemberDTO login = (MemberDTO) session.getAttribute("login");
 		if (login == null)	// 비회원 구매 시 
-			cDTO.setUserid("비회원");	// userid 컬럼 not null 처리 - 임시 데이터로 member 테이블에 존재하는 userid 입력하기
+			cDTO.setUserid("비회원");	// userid 컬럼 not null 처리 - 임시 데이터로 member 테이블에 존재하는 비회원 전용 userid 입력하기
 		else if (login != null && cDTO.getUserid() == null)	// 회원 구매
 			cDTO.setUserid(login.getUserid());
 		
-		// System.out.println(cDTO);
-		
 		ModelAndView mav = new ModelAndView();
 		
-		// 도매 상품일 경우, 번들 정보를 가져옴
-		if (cDTO.getBcategory() != null && cDTO.getBcategory().length() > 0
-				&& !cDTO.getBcategory().contains("단품")) {
-			BundleDTO bDTO = orderService.getBPrice(cDTO.getGcode());
-			mav.addObject("bDTO", bDTO);
-		}
+		if (cDTO.getBcategory() != null && cDTO.getBcategory().length() > 0) {
+			if (!cDTO.getBcategory().contains("단품")) {	// 도매 상품일 경우, 번들 정보를 가져옴
+				BundleDTO bDTO = orderService.getBPrice(cDTO.getGcode());
+				mav.addObject("bDTO", bDTO);
+			}
+		} else 	// 소매 상품일 경우, bcategory 컬럼을 "소매품"으로 통일 
+			cDTO.setBcategory("소매품");
+
+		System.out.println(cDTO);	// 확인용
 		
 		mav.addObject("cDTO", cDTO);
 		mav.setViewName("order");
@@ -57,10 +58,13 @@ public class OrderController {
 	// 상품 한 개 주문하기
 	@RequestMapping(value="/oneGoodsOrder")
 	public String oneGoodsOrder(HttpSession session, OrderinfoDTO oiDTO) {
+		System.out.println("1: " + oiDTO);
+		
 		// 도매 상품일 경우, 번들 정보를 가져옴
 		int bundle = 1;	// 번들 묶음 단위 - 기본값 1
-		if (oiDTO.getBcategory() != null && oiDTO.getBcategory().length() > 0
-				&& !(oiDTO.getBcategory().contains("단품"))) {
+		//if (oiDTO.getBcategory() != null && oiDTO.getBcategory().length() > 0
+		//		&& !(oiDTO.getBcategory().contains("단품"))) {
+		if (!oiDTO.getBcategory().equals("소매품")) {
 			BundleDTO bDTO = orderService.getBPrice(oiDTO.getGcode());
 			bundle = Integer.parseInt(bDTO.getBcategory().replaceAll("[^\\d]", ""));	// 번들 정보에서 숫자만 추출해 저장
 			session.setAttribute("bDTO", bDTO);
@@ -78,10 +82,12 @@ public class OrderController {
 			else if (login != null && oiDTO.getUserid() == null)	// 회원 구매
 				oiDTO.setUserid(login.getUserid());
 			
+			/*
 			if (oiDTO.getBcategory() == null || oiDTO.getBcategory().length() < 1)	// 소매 상품일 경우
 				oiDTO.setBcategory("소매품");
+			*/
 			
-			// System.out.println(oiDTO);
+			System.out.println("2: " + oiDTO);	// 확인용
 			
 			// 1. orderinfo 테이블에 레코드 추가
 			int insertOrderinfo = orderService.oneGoodsOrder(oiDTO);

@@ -18,7 +18,8 @@
 	// 사업자 회원의 도/소매 여부
 	boolean bundle = false;	// false: 소매, true: 도매
 	OrderinfoDTO oiDTO = (OrderinfoDTO) session.getAttribute("oiDTO");
-	if (oiDTO.getBcategory() != null && !oiDTO.getBcategory().equals("소매품")) {
+	// if (oiDTO.getBcategory() != null && !oiDTO.getBcategory().equals("소매품")) {
+	if (!oiDTO.getBcategory().equals("소매품")) {
 		if (!oiDTO.getBcategory().contains("단품")) {	// 도매
 			bundle = true;
 			usercode = 35;
