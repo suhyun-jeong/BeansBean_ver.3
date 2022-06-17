@@ -7,29 +7,6 @@
 
 <%@ page import="com.dto.CartDTO" %>
 
-<style type="text/css">
-	div {
-		clear: both;
-	}
-
-	ul {
-		clear: both;
-		list-style: none;
-	}
-	li {
-		float: left;
-		margin: 0 10px;
-	}
-	
-	.goodsInfo li {
-		float: left;
-		margin: 10px 5px;
-		
-		text-align: center;
-		width: 100px;
-	}
-</style>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <!-- 회원/비회원 및 도/소매 여부 체크 -->
@@ -55,6 +32,7 @@
 <c:set var="usercode" value="<%= usercode %>" />
 <c:set var="bundle" value="<%= bundle %>" />
 
+<%-- 확인용 --%>
 <%-- 
 <c:choose>
 	<c:when test="${usercode == 0}">
@@ -72,18 +50,46 @@
 </c:choose>
  --%>
 
+<!-- 스타일시트 -->
+<style type="text/css">
+	div {
+		clear: both;
+	}
+
+	ul {
+		clear: both;
+		list-style: none;
+	}
+	
+	li {
+		float: left;
+		margin: 0 10px;
+	}
+	
+	.goodsInfo li {
+		float: left;
+		margin: 10px 5px;
+		
+		text-align: center;
+		width: 100px;
+	}
+</style>
+
 <script type="text/javascript">
 	$(function() {
-		var bCategory = "<c:out value='${bDTO.bcategory}' />";	// 도매 묶음 (= 번들)
+		var bCategory = "<c:out value='${cDTO.bcategory}' />";	// 도매 묶음 (= 번들)
 		var gPrice = parseInt($("#price").text());	// 상품 가격: 도매 가격 or 소매 가격
 		var gAmount = parseInt($("#gamount").val());	// 상품 수량
 		var bundleInt = 1;	// 번들 수량 기본값 1
-
-		console.log(bCategory)
+		
+		console.log(bCategory)	// 확인용
 		
 		// 번들에서 숫자 및 단위 추출
-		if (bCategory != "" && !bCategory.startsWith("단품")) {	// 도매 품목일 경우
-			bundleInt = parseInt(bCategory.replaceAll("[^\\d]", ""));	// 번들에서 숫자 추출
+		if (!bCategory.includes("소매품") && !bCategory.includes("단품")) {	// 도매 품목일 경우
+			bCategory = "<c:out value='${bDTO.bcategory}' />"
+			// console.log(bCategory)	// 확인용
+			
+			bundleInt = parseInt(bCategory.replaceAll("[^\\d]", ""));	// 번들에서 숫자만 추출
 			var bundleUnit = bCategory.replace(bundleInt.toString(), "").trim();	// 번들에서 단위 추출
 			
 			$("#bUnit").text("(" + bundleUnit + ")");	// 번들 단위 화면에 출력
@@ -110,7 +116,7 @@
 			
 			if ($("#gamount").val().length > 0) {
 				$("#bTotal").text(parseInt(this.value) * bundleInt);	// 전체 수량 화면에 출력
-				$("#totalPrice").text(gPrice * $("#gamount").val());	// 총합 출력
+				$("#totalPrice").text(bundleInt * gPrice * $("#gamount").val());	// 총합 출력
 			}
 		});
 		
@@ -303,17 +309,17 @@
 		</div>
 	</c:if>
 	
-	<div><ul><li><hr></li></ul></div>	<!-- 구분선 -->
-	
 	<div>
 		<ul>
 			<li>
 				총 결제 금액: <span id="totalPrice"></span>원
+				<c:if test="${usercode == 35}">(묶음 가격)</c:if>
 			</li>
 		</ul>
 	</div>
 	<br>
 	
+	<div style="width:75%;"><hr></div>	<!-- 구분선 -->
 	
 	<div><ul><li>배송지 정보</li></ul></div>
 	
@@ -398,6 +404,7 @@
 	</div>
 	<br>
 	
+	<div style="width:50%;"><hr></div>	<!-- 구분선 -->
 	
 	<div><ul><li>결제 수단</li></ul></div>
 	
