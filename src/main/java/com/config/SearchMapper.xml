@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace= "SearchMapper">
+
+<select id="SearchList" resultType="SearchMapper">
+	select 
+	*
+	from
+	(
+		select/* +INDEX_DESC(GOODS)*/
+		gCode,gCategory, gName, gPrice, gAmount, gImage from goods 
+		
+		where
+		(gName like '%Test%')
+		
+<!-- 		where rownum <= 10 -->
+
+</select>
+<select id="GoodsSelect" resultType="int">
+
+  		select count(*) from gCode
+  		
+		<include refid="SearchList"></include>
+		
+	</select>
+
+</mapper>
