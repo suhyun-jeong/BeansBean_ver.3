@@ -1,6 +1,7 @@
 package com.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,14 @@ public class OrderService {
 	// 도매 상품의 가격 가져오기
 	public BundleDTO getBPrice(String gcode) {
 		return dao.getBPrice(gcode);
+	}
+	
+	/**********************/
+	/* 관리자 기능 */
+	
+	// 모든 주문 내역 가져오기
+	public List<OrderinfoDTO> getOrders() {
+		return dao.getOrders();
 	}
 	
 }

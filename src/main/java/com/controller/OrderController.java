@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -111,11 +112,17 @@ public class OrderController {
 	}
 	
 	/**********************/
+	/* 관리자 기능 */
 	
 	// 주문 관리 페이지로 이동
 	@RequestMapping(value="/ManagerCheck/orderManagement")
-	public String orderManagement() {
-		return "order_management";
+	public String orderManagement(HttpSession session) {
+		List<OrderinfoDTO> orderList = orderService.getOrders();
+		// System.out.println(orderList);	// 확인용
+		
+		session.setAttribute("orderList", orderList);
+		
+		return "redirect:../order_management";
 	}
 	
 }
