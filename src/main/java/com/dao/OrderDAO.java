@@ -1,6 +1,7 @@
 package com.dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,14 @@ public class OrderDAO {
 	// 도매 상품의 가격 가져오기
 	public BundleDTO getBPrice(String gcode) {
 		return session.selectOne("OrderMapper.getBPrice", gcode);
+	}
+
+	/**********************/
+	/* 관리자 기능 */
+	
+	// 모든 주문 내역 가져오기
+	public List<OrderinfoDTO> getOrders() {
+		return session.selectList("OrderMapper.getOrders");
 	}
 	
 }
