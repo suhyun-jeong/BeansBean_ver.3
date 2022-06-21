@@ -19,6 +19,7 @@
 					<!-- 관리자 페이지 -->
 					<span><a href="ManagerCheck/CtrlGoods">상품 관리</a></span>
 					<span><a href="ManagerCheck/goodsinsert">상품 등록</a></span>
+					<span><a href="ManagerCheck/orderManagement">주문 관리</a></span>
 				</c:if>
 			</ul>
 		</div>

@@ -5,9 +5,28 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
+<!-- 스타일시트 -->
 <style type="text/css">
 	span {
 		display:inline-block;
+	}
+	
+	div {
+		clear: both;
+	}
+
+	ul {
+		clear: both;
+		list-style: none;
+	}
+	
+	li {
+		float: left;
+	}
+	
+	.label {
+		display:inline-block;
+		width: 70px;
 	}
 </style>
 
@@ -49,9 +68,9 @@
 		<div>
 			<ul>
 				<li>
-					<span>아이디: </span> 
+					<span class="label">아이디: </span> 
 					<input type="text" name="userid" id="userid" class="loginInput"><br>
-					<span>비밀번호: </span>
+					<span class="label">비밀번호: </span>
 					<input type="text" name="passwd" id="passwd" class="loginInput">
 				</li>
 				<li>
