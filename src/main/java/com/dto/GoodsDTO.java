@@ -10,12 +10,17 @@ public class GoodsDTO {
 	private int gprice;
 	private int gamount;
 	private String gimage;
+	
+	private String type;
+	private String keyword;
 
 	public GoodsDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public GoodsDTO(String gcode, String gcategory, String gname, int gprice, int gamount, String gimage) {
+
+	public GoodsDTO(String gcode, String gcategory, String gname, int gprice, int gamount, String gimage, String type,
+			String keyword) {
 		super();
 		this.gcode = gcode;
 		this.gcategory = gcategory;
@@ -23,6 +28,8 @@ public class GoodsDTO {
 		this.gprice = gprice;
 		this.gamount = gamount;
 		this.gimage = gimage;
+		this.type = type;
+		this.keyword = keyword;
 	}
 	@Override
 	public String toString() {
@@ -65,6 +72,24 @@ public class GoodsDTO {
 	public void setGimage(String gimage) {
 		this.gimage = gimage;
 	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+	
+	
 	
 	
 }
