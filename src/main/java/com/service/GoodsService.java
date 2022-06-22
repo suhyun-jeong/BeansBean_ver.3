@@ -79,4 +79,9 @@ public class GoodsService {
 		return dao.updateAmount(oiMap);
 	}
 
+	public List<GoodsDTO> findgoods(GoodsDTO goodsdto) {
+		
+		return dao.findgoods(goodsdto);
+	}
+
 }

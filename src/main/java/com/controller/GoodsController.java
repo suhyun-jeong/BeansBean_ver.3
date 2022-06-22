@@ -8,6 +8,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -122,5 +124,17 @@ public class GoodsController {
 		System.out.println(map); //
 		service.cartUpdate(map);
 	}
+	
+//	@GetMapping(value = "/findgoods")
+//	@ResponseBody
+//	public List<GoodsDTO> findgoods(@RequestParam("type") String type,
+//			@RequestParam("keyword") String keyword, Model model) throws Exception{
+//		GoodsDTO goodsdto = new GoodsDTO();
+//		goodsdto.setType(type);
+//		goodsdto.setKeyword(keyword);
+//		
+//		return GoodsService.findgoods(goodsdto);
+//		
+//	}
 
 }

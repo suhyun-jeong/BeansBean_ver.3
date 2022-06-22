@@ -26,5 +26,13 @@
 	<select id="getBPrice" parameterType="String" resultType="BundleDTO">
 		SELECT * FROM BUNDLE WHERE GCODE = #{gcode}
 	</select>
+	
+	<!-- ********** -->
+	<!-- 관리자 기능 -->
+	
+	<!-- 모든 주문 내역 가져오기 -->
+	<select id="getOrders" resultType="OrderinfoDTO">
+		SELECT * FROM ORDERINFO ORDER BY NUM
+	</select>
 
 </mapper>

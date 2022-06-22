@@ -80,4 +80,11 @@ public class GoodsDAO {
 	public int updateAmount(HashMap<String, Object> oiMap) {
 		return session.update("GoodsMapper.updateAmount", oiMap);
 	}
+
+	public List<GoodsDTO> findgoods(GoodsDTO goodsdto) {
+		
+		return session.selectList("GoodsMapper.findgoods", goodsdto);
+	}
+	
+
 }
