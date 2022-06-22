@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dto.BundleDTO;
@@ -123,6 +125,32 @@ public class OrderController {
 		session.setAttribute("orderList", orderList);
 		
 		return "redirect:../order_management";
+	}
+	
+	// 주문 승인
+	@RequestMapping(value="/ManagerCheck/approveOrder")
+	@ResponseBody
+	public void approveOrder(@RequestParam("num") int num) {
+		System.out.println(num);	// 확인용
+		
+		// orderinfo 테이블에서 승인 완료됨으로 표시
+		/*
+		int updatedOrder = orderService.approveOrder(num);
+		System.out.println("orderinfo update: " + updatedOrder);
+		 */
+	}
+	
+	// 주문 보류(= 삭제)
+	@RequestMapping(value="/ManagerCheck/deleteOrder")
+	@ResponseBody
+	public void deleteOrder(@RequestParam("num") int num) {
+		System.out.println(num);	// 확인용
+		
+		// orderinfo 테이블에서 삭제
+		/*
+		int deletedOrder = orderService.deleteOrder(num);
+		System.out.println("orderinfo delete: " + deletedOrder);
+		 */
 	}
 	
 }
