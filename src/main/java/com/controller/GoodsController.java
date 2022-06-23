@@ -125,10 +125,14 @@ public class GoodsController {
 		service.cartUpdate(map);
 	}
 	
-//	@GetMapping(value = "/findgoods")
+//	@RequestMapping(value = "/goodslist")
 //	@ResponseBody
-//	public List<GoodsDTO> findgoods(@RequestParam("type") String type,
-//			@RequestParam("keyword") String keyword, Model model) throws Exception{
+//	public List<GoodsDTO> findgoods(@RequestParam("type")String type,
+//			@RequestParam("keyword") String keyword, Model model) {
+////		ModelAndView mav = new ModelAndView();
+////		mav.setViewName("/goodsList");
+////		mav.addObject("goodsList", keyword);
+//		
 //		GoodsDTO goodsdto = new GoodsDTO();
 //		goodsdto.setType(type);
 //		goodsdto.setKeyword(keyword);

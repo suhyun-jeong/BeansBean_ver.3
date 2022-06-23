@@ -13,30 +13,6 @@
 <c:if test="${not empty success }">
 	<script type="text/javascript">
 		alert("${success}")
- 		
-		// 검색기능 실행
-		function findgoods(){
-	$.ajax({
-		type: 'GET',
-		url : "/findgoods",
-		data : $("form[name=find_goods]").serialize(),
-		success : function(result){
-			//테이블 초기화
-			$('#goods > tbody').empty();
-			if(result.length>=1){
-				result.forEach(function(item){
-					str='<tr>'
-					str += "<td>"+item.gmount+"</td>";
-					str+="<td>"+item.gName+"</td>";
-					str+="<td>"+item.gCode+"</td>";
-					str+="</tr>"
-					$('#goods').append(str);
-        		})				 
-			}
-		}
-	})
-
-		
 	
 	</script>
 	<%
@@ -63,20 +39,6 @@
 	<div id="content">
 		<div class="main_visual">
 			<img src="images/banner/main_banner.png">
-		</div>
-		
-		<div id="findgoods">
-		<div class="find_form">
-			<form name ="find_goods" autocomplete="off">
-				<select name="type">
-					<option selected value="">검색조건</option>
-					<option value="gname">상품명</option>
-					<option value="gcategory">검색조건</option>
-				</select>
-				
-				<input type="text" name="keyword" value=""></input>
-				<input type="button" onclick="findgoods()" class="btn_find_goods" value="검색"></input>
-			</form>
 		</div>
 		
 		<jsp:include page="goods/goodsList.jsp" flush="true"/>
