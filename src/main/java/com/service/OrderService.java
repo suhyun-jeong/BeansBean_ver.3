@@ -1,7 +1,7 @@
 package com.service;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.dao.OrderDAO;
 import com.dto.BundleDTO;
 import com.dto.OrderinfoDTO;
+import com.dto.OrderstateDTO;
 
 @Service
 public class OrderService {
@@ -16,7 +17,7 @@ public class OrderService {
 	@Autowired
 	OrderDAO dao;
 	
-	// 상품 한 개 주문하기
+	// 상품 한 개 주문하기 - orderinfo 테이블에 레코드 추가
 	public int oneGoodsOrder(OrderinfoDTO oiDTO) {
 		return dao.oneGoodsOrder(oiDTO);
 	}
@@ -29,9 +30,24 @@ public class OrderService {
 	/**********************/
 	/* 관리자 기능 */
 	
+	// 상품 한 개 주문하기 - orderstate 테이블에 레코드 추가
+	public int oneOrderState(OrderstateDTO osDTO) {
+		return dao.oneOrderState(osDTO);
+	}
+	
 	// 모든 주문 내역 가져오기
 	public List<OrderinfoDTO> getOrders() {
 		return dao.getOrders();
+	}
+	
+	// 모든 주문 관리 내역 가져오기
+	public List<OrderinfoDTO> getOrderStates() {
+		return dao.getOrderStates();
+	}
+
+	// 주문 처리 상태 변경
+	public int changeOrderstate(Map<String, Object> map) {
+		return dao.changeOrderstate(map);
 	}
 	
 }

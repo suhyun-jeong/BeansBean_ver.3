@@ -31,7 +31,8 @@
 	}
 	
 	.gcodeArea {
-		color: purple;
+		font-weight: bold;
+		color: #603B1E;
 	}
 	.bundleOrNot {
 		display: none;	
@@ -56,11 +57,16 @@
 			// 테이블에 열 추가하여 승인됨으로 표시
 			$.ajax({
 				type:"post", 
-				url:"ManagerCheck/approveOrder", 
+				url:"ManagerCheck/changeOrderstate", 
 				dataType:"text", 
-				data:{"num":num}, 
+				data:{
+					"num":num, 
+					"o_state":"pass"
+				}, 
 				success:function(data, status, xhr) {
-					$(this).parents().filter("ul").css("background-color", "green");	// 배경색 변경
+					console.log("success")
+					
+					// $(this).parents().filter("ul").css("background-color", "#FCDD09");	// 배경색 변경
 
 					// 체크박스 및 버튼 비활성화
 					console.log($(this).parent().siblings().get(0));
@@ -72,17 +78,22 @@
 		});
 		
 		// 보류 버튼
-		$("button[id^='defer']").click(function() {
-			var num = this.id.replace("defer-", "");	// 해당하는 주문 번호
+		$("button[id^='return']").click(function() {
+			var num = this.id.replace("return-", "");	// 해당하는 주문 번호
 			
 			// 테이블에서 삭제
 			$.ajax({
 				type:"post", 
-				url:"ManagerCheck/deleteOrder", 
+				url:"ManagerCheck/changeOrderstate", 
 				dataType:"text", 
-				data:{"num":num}, 
+				data:{
+					"num":num, 
+					"o_state":"return"
+				}, 
 				success:function(data, status, xhr) {
-					$(this).parents().filter("ul").remove();	// 화면에서도 삭제
+					console.log("success")
+					
+					// $(this).parents().filter("ul").remove();	// 화면에서도 삭제
 				}, 
 				error:function(xhr, status, error) {
 					console.log(error);
@@ -107,7 +118,6 @@
 			<li style="width:240px;">상품 정보</li>
 			<li style="width:120px;">번들</li>
 			<li>옵션</li>
-			<li>판매가</li>
 			<li>수량</li>
 			<li>전체 수량</li>
 			<li style="width:120px;">가격 총합</li>
@@ -116,26 +126,27 @@
 
 		<!-- 주문 내역 -->
 		<div style="overflow:auto;height:500px;">
-			<c:forEach var="oDTO" items="${orderList}" varStatus="status">
-				<ul id="order-${oDTO.num}" style="border-top:lightgray 1px solid;">
+			<!-- 반복 시작 -->
+			<c:forEach var="oiDTO" items="${oList}" varStatus="status">
+				<ul id="order-${oiDTO.num}" style="border-top:lightgray 1px solid;">
 					<li style="width:40px;">
-						<input type="checkbox" class="ckb" id="cb-${oDTO.num}">
+						<input type="checkbox" class="ckb" id="cb-${oiDTO.num}">
 					</li>
 					<li>
-						${oDTO.num}
+						${oiDTO.num}
 					</li>
 					<li>
-						${oDTO.userid}
+						${oiDTO.userid}
 					</li>
 					<li style="width:240px;">
-						<span class="gcodeArea">${oDTO.gcode}</span><br>
-						${oDTO.gname}
+						<span class="gcodeArea">${oiDTO.gcode}</span><br>
+						${oiDTO.gname}
 					</li>
 					<li style="width:120px;">
-						${oDTO.bcategory}
+						${oiDTO.bcategory}
 						<span class="bundleOrNot">
 							<c:choose>
-								<c:when test="${fn:contains(oDTO.bcategory, '도매')}">	<!-- 도매품 -->
+								<c:when test="${fn:contains(oiDTO.bcategory, '도매')}">	<!-- 도매품 -->
 									bundle
 								</c:when>
 								<c:otherwise>	<!-- 소매품 -->
@@ -145,24 +156,21 @@
 						</span>
 					</li>
 					<li>
-						${oDTO.vcategory}
+						${oiDTO.vcategory}
 					</li>
 					<li>
-						${oDTO.gprice}
-					</li>
-					<li>
-						${oDTO.gamount}
+						${oiDTO.gamount}
 					</li>
 					<li>
 						<c:choose>
-							<c:when test="${fn:contains(oDTO.bcategory, '도매')}">
-								<c:set var="bcat" value="${oDTO.bcategory}" />	<!-- 도매품의 전체 수량 -->
+							<c:when test="${fn:contains(oiDTO.bcategory, '도매')}">
+								<c:set var="bcat" value="${oiDTO.bcategory}" />	<!-- 도매품의 전체 수량 -->
 								<%
 									String bcat = (String) pageContext.getAttribute("bcat");
 									int totalAmount = Integer.parseInt(bcat.replaceAll("[\\D]", ""));
 									pageContext.setAttribute("totalAmount", totalAmount);
 								%>
-								${oDTO.gamount * totalAmount}
+								${oiDTO.gamount * totalAmount}
 							</c:when>
 							<c:otherwise>	<!-- 소매품 수량 -->
 								<span style="color:lightgray;">〃</span>
@@ -170,14 +178,17 @@
 						</c:choose>
 					</li>
 					<li style="width:120px;">
-						${oDTO.gprice * oDTO.gamount}
+						${oiDTO.gprice * oiDTO.gamount}
 					</li>
 					<li>
-						<button id="pass-${oDTO.num}">승인</button>
-						<button id="defer-${oDTO.num}">보류</button>
+						<%-- 드롭박스로 바꾸고 승인 여부에 따라 옵션 선택 --%>
+						${osList[status.index].o_state}<br>
+						<button id="pass-${oiDTO.num}">승인</button>
+						<button id="return-${oiDTO.num}">보류</button>
 					</li>
 				</ul>
 			</c:forEach>
+			<!-- 반복 끝 -->
 		</div>
 	</div>
 	

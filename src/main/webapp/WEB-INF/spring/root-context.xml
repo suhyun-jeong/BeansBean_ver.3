@@ -42,6 +42,7 @@
 				<value>com.dto.IngrementDTO</value>
 				<value>com.dto.MemberDTO</value>
 				<value>com.dto.OrderinfoDTO</value>
+				<value>com.dto.OrderstateDTO</value>
 				<value>com.dto.VariationDTO</value>
 			</list>
 		</property>
