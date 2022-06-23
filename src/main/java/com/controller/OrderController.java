@@ -2,6 +2,7 @@ package com.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -9,12 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dto.BundleDTO;
 import com.dto.CartDTO;
 import com.dto.MemberDTO;
 import com.dto.OrderinfoDTO;
+import com.dto.OrderstateDTO;
 import com.service.GoodsService;
 import com.service.OrderService;
 
@@ -84,19 +88,35 @@ public class OrderController {
 			else if (login != null && oiDTO.getUserid() == null)	// 회원 구매
 				oiDTO.setUserid(login.getUserid());
 
-			System.out.println(oiDTO);	// 확인용
-			
 			// 1. orderinfo 테이블에 레코드 추가
 			int insertOrderinfo = orderService.oneGoodsOrder(oiDTO);
 			System.out.println("orderinfo insert: " + insertOrderinfo);
 			
-			// 2. cart 테이블에 데이터가 있다면 삭제
+			System.out.println(oiDTO);	// 확인용
+			
+			// 2-1. 해당 주문의 처리 상태에 대한 객체 생성
+			OrderstateDTO osDTO = new OrderstateDTO();
+			osDTO.setNum(oiDTO.getNum());
+			String tempPost = String.valueOf(oiDTO.getPost());
+			if (tempPost.length() < 5)	// 우편번호가 네자릿수라면 앞에 생략된 0을 추가
+				tempPost = "0" + tempPost;
+			osDTO.setPost(tempPost);
+			osDTO.setAddr1(oiDTO.getAddr1());
+			osDTO.setAddr2(oiDTO.getAddr2());
+			
+			System.out.println(osDTO);	// 확인용
+			
+			// 2-2. orderstate 테이블에 레코드 추가
+			int insertOrderstate = orderService.oneOrderState(osDTO);
+			System.out.println("orderstate insert: " + insertOrderstate);
+			
+			// 3. cart 테이블에 데이터가 있다면 삭제
 			/*
 			int deleteCart = goodsService.delete(oiDTO.getNum());
 			System.out.println("cart delete: " + deleteCart);
 			 */
 			
-			// 3. 남은 재고 계산하여 goods 테이블 업데이트
+			// 4. 남은 재고 계산하여 goods 테이블 업데이트
 			HashMap<String, Object> oiMap = new HashMap<>();
 			oiMap.put("gcode", oiDTO.getGcode());
 			oiMap.put("gamount", oiDTO.getGamount() * bundle);
@@ -117,12 +137,26 @@ public class OrderController {
 	// 주문 관리 페이지로 이동
 	@RequestMapping(value="/ManagerCheck/orderManagement")
 	public String orderManagement(HttpSession session) {
-		List<OrderinfoDTO> orderList = orderService.getOrders();
-		// System.out.println(orderList);	// 확인용
+		List<OrderinfoDTO> oList = orderService.getOrders();
+		System.out.println(oList);	// 확인용
+		List<OrderinfoDTO> osList = orderService.getOrderStates();
+		System.out.println(osList);	// 확인용
 		
-		session.setAttribute("orderList", orderList);
+		session.setAttribute("oList", oList);
+		session.setAttribute("osList", osList);
 		
 		return "redirect:../order_management";
+	}
+	
+	// 주문 처리 상태 변경
+	@RequestMapping(value="/ManagerCheck/changeOrderstate")
+	@ResponseBody
+	public void changeOrderstate(@RequestParam Map<String, Object> map) {
+		System.out.println(map.get("num") + "\t" + map.get("o_state"));	// 확인용
+		
+		// orderinfo 테이블의 o_state 컬럼 업데이트
+		int updatedOrderstate = orderService.changeOrderstate(map);
+		System.out.println("orderstate update: " + updatedOrderstate);
 	}
 	
 }

@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="OrderMapper">
 
-	<!-- 상품 한 개 주문하기 -->
+	<!-- 상품 한 개 주문하기 - 주문 내역 테이블 -->
 	<insert id="oneGoodsOrder" parameterType="OrderinfoDTO">
 		INSERT INTO ORDERINFO
 		VALUES(
@@ -20,6 +20,18 @@
 			#{gcode}, #{gname}, #{bcategory}, #{vcategory}, #{gprice}, #{gamount}, 
 			#{ordername}, #{post}, #{addr1}, #{addr2}, #{phone1}, #{phone2}, #{phone3}, #{paymethod}, SYSDATE, #{gimage}
 		)
+		
+		<selectKey resultType="int" keyProperty="num" order="AFTER">
+			SELECT ORDERINFO_SEQ.currval FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<!-- 상품 한 개 주문하기 - 주문 관리 테이블 -->
+	<insert id="oneOrderState" parameterType="OrderstateDTO">	<!-- 해당 주문의 처리 상태 -->
+		INSERT INTO ORDERSTATE (num, post, addr1, addr2)
+		VALUES(
+			#{num}, #{post}, #{addr1}, #{addr2}
+		)
 	</insert>
 	
 	<!-- 도매 상품의 가격 가져오기 -->
@@ -30,9 +42,21 @@
 	<!-- ********** -->
 	<!-- 관리자 기능 -->
 	
-	<!-- 모든 주문 내역 가져오기 -->
+	<!-- 모든 주문 내역 가져오기 - 주문 내역 테이블 -->
 	<select id="getOrders" resultType="OrderinfoDTO">
 		SELECT * FROM ORDERINFO ORDER BY NUM
 	</select>
+	
+	<!-- 모든 주문 내역 가져오기 - 주문 관리 테이블 -->
+	<select id="getOrderStates" resultType="OrderstateDTO">
+		SELECT * FROM ORDERSTATE ORDER BY NUM
+	</select>
+	
+	<!-- 주문 처리 상태 변경 -->
+	<update id="changeOrderstate" parameterType="Map">
+		UPDATE ORDERSTATE 
+		SET o_state = #{o_state} 
+		WHERE num = #{num}
+	</update>
 
 </mapper>

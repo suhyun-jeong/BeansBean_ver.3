@@ -1,7 +1,7 @@
 package com.dao;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.dto.BundleDTO;
 import com.dto.OrderinfoDTO;
+import com.dto.OrderstateDTO;
 
 @Repository
 public class OrderDAO {
@@ -16,7 +17,7 @@ public class OrderDAO {
 	@Autowired
 	SqlSessionTemplate session;
 
-	// 상품 한 개 주문하기
+	// 상품 한 개 주문하기 - orderinfo 테이블에 레코드 추가
 	public int oneGoodsOrder(OrderinfoDTO oiDTO) {
 		return session.insert("OrderMapper.oneGoodsOrder", oiDTO);
 	}
@@ -29,9 +30,23 @@ public class OrderDAO {
 	/**********************/
 	/* 관리자 기능 */
 	
+	// 상품 한 개 주문하기 - orderstate 테이블에 레코드 추가
+	public int oneOrderState(OrderstateDTO osDTO) {
+		return session.insert("OrderMapper.oneOrderState", osDTO);
+	}
+	
 	// 모든 주문 내역 가져오기
 	public List<OrderinfoDTO> getOrders() {
 		return session.selectList("OrderMapper.getOrders");
 	}
-	
+
+	// 모든 주문 관리 내역 가져오기
+	public List<OrderinfoDTO> getOrderStates() {
+		return session.selectList("OrderMapper.getOrderStates");
+	}
+
+	// 주문 처리 상태 변경
+	public int changeOrderstate(Map<String, Object> map) {
+		return session.update("OrderMapper.changeOrderstate", map);
+	}
 }
