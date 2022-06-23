@@ -2,9 +2,51 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript">
+	// 검색기능 실행
+			function findgoods(){
+		$.ajax({
+			type: 'GET',
+			url : "/findgoods",
+			data : $("form[name=find_goods]").serialize(),
+			success : 
+				alert("findlist성공");
+				function(result){
+			}
+				//goodslist 초기화
+				$('#goods > tbody').empty();
+				if(result.length>=1){
+					//goodslist반복
+		/* 			result.forEach(function(goods){
+					
+						$('#goods').append(str); */
+	        		})				 
+				}
+			}
+		})
+</script>
+		</head>
+		
+		<div class="find_form">
+			<form name ="find_goods" autocomplete="off">
+				<select name="type">
+					<option selected value="">검색조건</option>
+					<option value="gname">상품명</option>
+					<option value="gcategory">검색조건</option>
+				</select>
+				
+				<input type="text" name="keyword" value=""></input>
+				<input type="button" onclick="findgoods()" class="btn_find_goods" value="검색"></input>
+			</form>
+		</div>
+		
 
+			
+<body>
 <section class="goods">
-
 	<!-- 반복시작 -->
 	<c:forEach var="dto" items="${goodsList}" varStatus="status">
 			<ul class="goods_line">
@@ -47,3 +89,5 @@
 			</ul>
 	</c:forEach>
 </section>
+</body>
+</html>
