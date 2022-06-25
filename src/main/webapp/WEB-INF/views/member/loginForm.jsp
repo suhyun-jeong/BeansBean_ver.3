@@ -32,10 +32,11 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
-
 	$(function() {
 		var input_id = $("#userid");
 		var input_pw = $("#passwd");
+		
+		input_id.focus();
 		
 		// 빈칸 검사 및 ID/PW 체크
 		$("form").submit(function(event) {
@@ -54,7 +55,7 @@
 				}
 			}
 		});
-
+	});
 </script>
 
 <!-- 아이디 혹은 비밀번호가 일치하지 않을 때 -->
