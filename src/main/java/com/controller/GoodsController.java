@@ -30,15 +30,33 @@ public class GoodsController {
 	@Autowired
 	GoodsService service;
 	
-	@RequestMapping("/goodsList")
-	public ModelAndView goodsList(String gcategory) {
-		// TODO 상품목록보기
-//		System.out.println(gcategory);
-		if(gcategory == null) {
+	/*
+	 * @RequestMapping("/goodsList") public ModelAndView goodsList(String gcategory)
+	 * { // TODO 상품목록보기 // System.out.println(gcategory); if(gcategory == null) {
+	 * 
+	 * gcategory = "coffee";
+	 * 
+	 * }
+	 */
+		
+		@RequestMapping("/goodsList")
+		public ModelAndView goodsList(String gcategory, String keyword, String condition) {
+			// TODO 상품목록보기
+//			System.out.println(gcategory);
+			if(gcategory == null) {
 
-			gcategory = "coffee";
-
-		}
+				gcategory = "coffee";
+				
+				GoodsDTO dto = new GoodsDTO();
+				if(keyword != null) {
+					if(condition.equals("gCategory")) {
+					dto.setGcategory(keyword);
+					}else if(condition.equals("gName")) {
+					dto.setGname(keyword);
+					
+					}
+				}
+			}
 
 		List<GoodsDTO> list = service.goodsList(gcategory);
 		
@@ -47,6 +65,7 @@ public class GoodsController {
 //		System.out.println(list);
 		mav.setViewName("main");
 		return mav;
+		
 	}
 	
 	@RequestMapping("/goodsDetail")

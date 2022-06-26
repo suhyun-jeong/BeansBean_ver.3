@@ -8,7 +8,7 @@
 	select gCode,gcategory,gName,gPrice,gAmount,gImage
 	from goods
 	where gcategory = #{gcategory}
-</select>
+</select> 
 
 <select id="goodsDetail" resultType="GoodsDTO" parameterType="string">
 	select gCode,gcategory, gName, gPrice, gAmount, gImage
@@ -77,5 +77,15 @@
 	<update id="updateAmount" parameterType="HashMap">
 		UPDATE GOODS SET GAMOUNT = GAMOUNT - #{gamount} WHERE GCODE = #{gcode}
 	</update>
+	
+	<!-- 상품검색 -->
+	 <select id="findgoods"  resultType="GoodsDTO" parameterType="string">
+	
+		select gCode,gcategory,gName,gPrice,gAmount,gImage
+		from goods
+		where gName = #{gName}
+	
+	</select>
+
 
 </mapper>

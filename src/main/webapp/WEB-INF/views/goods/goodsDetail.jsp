@@ -108,14 +108,14 @@
 				
 
 				//cart 클릭이벤트
-				$("#cart").on("click", function() {
+				 $("#cart").on("click", function() {
 					$("form").attr("action", "loginCheck/cartAdd");
-					var answer;
+					 var answer;
 					answer = confirm("상품을 장바구니에 담았습니다. 장바구니로 이동하시겠습니까?");
 					if(answer == true){
-						location = "loginCheck/cartAdd"
-					}
-				});//end clickevent
+						location.href = "loginCheck/cartList"
+					} 
+				}) 
 				
 				
 				// 구매 버튼 클릭 시 구매 페이지로 이동
@@ -125,11 +125,11 @@
 				
 		});//end ready
 		
+	
+		
 		
 		
 </script>
-
-	
 
 ${goodsDetail}
 <FORM name="goodDetailForm" method="GET" action="#"><!--action을 막음 --><!-- hidden data -->
@@ -242,7 +242,7 @@ ${goodsDetail.gname}
 	<div style='width:100%; float:left;'>
 		<br> <button id="orderBtn">구매</button>
 		&nbsp;&nbsp;
-		<button id="cart">장바구니</button>
+		<button class="test" id="cart" onclick="test()">장바구니</button>
 	</div>
 
 </FORM>
