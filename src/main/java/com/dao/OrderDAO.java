@@ -41,12 +41,27 @@ public class OrderDAO {
 	}
 
 	// 모든 주문 관리 내역 가져오기
-	public List<OrderinfoDTO> getOrderStates() {
+	public List<OrderstateDTO> getOrderStates() {
 		return session.selectList("OrderMapper.getOrderStates");
 	}
 
 	// 주문 처리 상태 변경
 	public int changeOrderstate(Map<String, Object> map) {
 		return session.update("OrderMapper.changeOrderstate", map);
+	}
+
+	// 주문 번호로 주문 내역 검색
+	public OrderinfoDTO getOrderByNum(int num) {
+		return session.selectOne("OrderMapper.getOrderByNum", num);
+	}
+
+	// 주문 번호로 주문 처리 상태 검색
+	public OrderstateDTO getOrderstateByNum(int num) {
+		return session.selectOne("OrderMapper.getOrderstateByNum", num);
+	}
+
+	// 주문 반려 사유 업데이트
+	public int updateReIssue(Map<String, Object> map) {
+		return session.update("OrderMapper.updateReIssue", map);
 	}
 }

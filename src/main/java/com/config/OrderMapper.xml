@@ -55,7 +55,38 @@
 	<!-- 주문 처리 상태 변경 -->
 	<update id="changeOrderstate" parameterType="Map">
 		UPDATE ORDERSTATE 
-		SET o_state = #{o_state} 
+		<choose>	
+			<when test="o_state == 'null'">	<!-- 주문 미승인 -->
+				SET o_state = NULL 
+			</when>
+			<otherwise>
+				SET o_state = #{o_state} 
+			</otherwise>
+		</choose>
+		WHERE num = #{num}
+	</update>
+	
+	<!-- 주문 번호로 주문 내역 검색 -->
+	<select id="getOrderByNum" resultType="OrderinfoDTO">
+		SELECT * FROM ORDERINFO WHERE NUM = #{num}
+	</select>
+	
+	<!-- 주문 번호로 주문 처리 상태 검색 -->
+	<select id="getOrderstateByNum" resultType="OrderstateDTO">
+		SELECT * FROM ORDERSTATE WHERE NUM = #{num}
+	</select>
+	
+	<!-- 주문 반려 사유 업데이트 -->
+	<update id="updateReIssue" parameterType="Map">
+		UPDATE ORDERSTATE 
+		<choose>
+			<when test="re_issue == 'null'">
+				SET re_issue = NULL 
+			</when>
+			<otherwise>
+				SET re_issue = #{re_issue} 
+			</otherwise>
+		</choose>
 		WHERE num = #{num}
 	</update>
 

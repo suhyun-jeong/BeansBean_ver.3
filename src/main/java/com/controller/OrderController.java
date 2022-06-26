@@ -137,25 +137,52 @@ public class OrderController {
 	// 주문 관리 페이지로 이동
 	@RequestMapping(value="/ManagerCheck/orderManagement")
 	public String orderManagement(HttpSession session) {
-		List<OrderinfoDTO> oList = orderService.getOrders();
-		System.out.println(oList);	// 확인용
-		List<OrderinfoDTO> osList = orderService.getOrderStates();
+		List<OrderinfoDTO> oiList = orderService.getOrders();
+		System.out.println(oiList);	// 확인용
+		List<OrderstateDTO> osList = orderService.getOrderStates();
 		System.out.println(osList);	// 확인용
 		
-		session.setAttribute("oList", oList);
+		session.setAttribute("oiList", oiList);
 		session.setAttribute("osList", osList);
 		
 		return "redirect:../order_management";
 	}
 	
+	// 주문 상세 보기 화면으로 이동
+	@RequestMapping(value="/ManagerCheck/orderDetail")
+	public String orderDetail(HttpSession session, @RequestParam int num) {
+		// System.out.println(num);	// 확인용
+		
+		OrderinfoDTO oiDTO = orderService.getOrderByNum(num);
+		session.setAttribute("oiDTO", oiDTO);
+		OrderstateDTO osDTO = orderService.getOrderstateByNum(num);
+		session.setAttribute("osDTO", osDTO);
+		
+		return "redirect:../order_management_detail";
+	}
+	
 	// 주문 처리 상태 변경
 	@RequestMapping(value="/ManagerCheck/changeOrderstate")
 	@ResponseBody
-	public void changeOrderstate(@RequestParam Map<String, Object> map) {
-		System.out.println(map.get("num") + "\t" + map.get("o_state"));	// 확인용
+	public List<OrderstateDTO> changeOrderstate(@RequestParam Map<String, Object> map) {
+		// System.out.println(map.get("num") + "\t" + map.get("o_state"));	// 확인용
 		
 		// orderinfo 테이블의 o_state 컬럼 업데이트
 		int updatedOrderstate = orderService.changeOrderstate(map);
+		System.out.println("orderstate update: " + updatedOrderstate);
+		
+		List<OrderstateDTO> osList = orderService.getOrderStates();
+		return osList;
+	}
+	
+	// 주문 반려 사유 업데이트
+	@RequestMapping(value="/ManagerCheck/updateReIssue")
+	@ResponseBody
+	public void updateReIssue(@RequestParam Map<String, Object> map) {
+		// System.out.println(map.get("num") + "\t" + map.get("re_issue"));	// 확인용
+		
+		// orderstate 테이블의 re_issue 컬럼 업데이트
+		int updatedOrderstate = orderService.updateReIssue(map);
 		System.out.println("orderstate update: " + updatedOrderstate);
 	}
 	

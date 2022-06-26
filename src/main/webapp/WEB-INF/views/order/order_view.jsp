@@ -95,7 +95,7 @@
 			$("#bUnit").text("(" + bundleUnit + ")");	// 번들 단위 화면에 출력
 		}
 		$("#bTotal").text(gAmount * bundleInt);	// 전체 수량 화면에 출력	
-		$("#totalPrice").text(bundleInt * gPrice * gAmount);	// 총합 출력
+		$("#totalPrice").text(gPrice * gAmount);	// 총합 출력
 		
 		
 		// 수량 입력창에 숫자만 받기
@@ -116,7 +116,7 @@
 			
 			if ($("#gamount").val().length > 0) {
 				$("#bTotal").text(parseInt(this.value) * bundleInt);	// 전체 수량 화면에 출력
-				$("#totalPrice").text(bundleInt * gPrice * $("#gamount").val());	// 총합 출력
+				$("#totalPrice").text(gPrice * $("#gamount").val());	// 총합 출력
 			}
 		});
 		

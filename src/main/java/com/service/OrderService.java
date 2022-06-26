@@ -41,13 +41,28 @@ public class OrderService {
 	}
 	
 	// 모든 주문 관리 내역 가져오기
-	public List<OrderinfoDTO> getOrderStates() {
+	public List<OrderstateDTO> getOrderStates() {
 		return dao.getOrderStates();
 	}
 
 	// 주문 처리 상태 변경
 	public int changeOrderstate(Map<String, Object> map) {
 		return dao.changeOrderstate(map);
+	}
+
+	// 주문 번호로 주문 내역 검색
+	public OrderinfoDTO getOrderByNum(int num) {
+		return dao.getOrderByNum(num);
+	}
+
+	// 주문 번호로 주문 처리 상태 검색
+	public OrderstateDTO getOrderstateByNum(int num) {
+		return dao.getOrderstateByNum(num);
+	}
+
+	// 주문 반려 사유 업데이트
+	public int updateReIssue(Map<String, Object> map) {
+		return dao.updateReIssue(map);
 	}
 	
 }
