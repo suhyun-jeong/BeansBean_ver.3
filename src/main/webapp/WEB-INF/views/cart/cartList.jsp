@@ -109,16 +109,25 @@ $(function() {
 	<form name="myForm">
 		<ul>
 			<c:forEach var="x" items="${cartList}">
-		
-				<li class="td_default" width="80">
 				 <input type="checkbox" name="check"
-					id="check81" class="check" value="${x.num}">
-				
-		
-				
-				 <li class="td_default" width="80">${x.num}</li> 
-				<li class="td_default" width="80"><img
-					src="../images/${x.gimage}.jpg" border="0"  align="center" width="80" /></li>
+					id="check81" class="check" value="${x.num}"/>
+					
+					<!-- 이미지 -->
+					<c:forTokens var="token" items="${cDTO.gimage}" delims="." varStatus="status">
+						<c:if test="${status.last}">
+							<c:choose>
+								<c:when test="${token eq 'jpg' || token eq 'gif' || token eq 'png' || token eq 'bmp'}">
+									<img src="images/${cDTO.gimage}" border="0" width="80" alt="상품 이미지" />
+								</c:when>
+								<c:otherwise>
+									<img src="images/${cDTO.gimage}.jpg" border="0" width="80" alt="상품 이미지" />
+								</c:otherwise>
+							</c:choose>
+						</c:if>
+					</c:forTokens>
+					
+					
+					
 				<li class="td_default" width="300" style='padding-left: 30px'>
 					${x.gname} <br> <font size="2" color="#665b5f">[옵션 :
 						소매옵션(${x.vcategory}) , 도매옵션(${x.bcategory})] </font>
@@ -134,6 +143,7 @@ $(function() {
 					size="2" value="${x.gamount}"></input>
 					</li>
 					
+					
 				<li><input type="button" value="수정" class="updateBtn"
 					data-num="${x.num}" data-price="${x.gprice}" ></li>
 					
@@ -146,7 +156,7 @@ $(function() {
 					
 				<li class="td_default" align="center" width="30"
 					style='padding-left: 10px'><input type="button" value="삭제"
-					class="deleteBtn" data-num="${x.num }"></li>
+					class="deleteBtn" data-num="${x.num}"></li>
 				<li height="10"></li>
 				<hr>
 				</c:forEach>

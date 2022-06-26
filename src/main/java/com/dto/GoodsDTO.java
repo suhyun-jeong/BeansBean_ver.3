@@ -11,15 +11,18 @@ public class GoodsDTO {
 	private int gamount;
 	private String gimage;
 	
-	private String type;
+	private String condition;
 	private String keyword;
+	
+	
+	
 
 	public GoodsDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public GoodsDTO(String gcode, String gcategory, String gname, int gprice, int gamount, String gimage, String type,
+	public GoodsDTO(String gcode, String gcategory, String gname, int gprice, int gamount, String gimage, String condition,
 			String keyword) {
 		super();
 		this.gcode = gcode;
@@ -28,7 +31,7 @@ public class GoodsDTO {
 		this.gprice = gprice;
 		this.gamount = gamount;
 		this.gimage = gimage;
-		this.type = type;
+		this.condition = condition;
 		this.keyword = keyword;
 	}
 	@Override
@@ -73,12 +76,12 @@ public class GoodsDTO {
 		this.gimage = gimage;
 	}
 
-	public String getType() {
-		return type;
+	public String getcondition() {
+		return condition;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setcondition(String type) {
+		this.condition = type;
 	}
 
 	public String getKeyword() {
