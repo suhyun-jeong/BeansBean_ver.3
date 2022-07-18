@@ -28,6 +28,7 @@
 				<value>classpath:com/config/GoodsMapper.xml</value>
 				<value>classpath:com/config/OrderMapper.xml</value>
 				<value>classpath:com/config/BoardMapper.xml</value>
+				<value>classpath:com/config/ReplyMapper.xml</value>
 			</list>
 		</property>
 		<!-- <property name="mapperLocations" value="classpath:com/dao/*.xml" /> -->
@@ -44,6 +45,7 @@
 				<value>com.dto.OrderinfoDTO</value>
 				<value>com.dto.OrderstateDTO</value>
 				<value>com.dto.VariationDTO</value>
+				<value>com.dto.ReplyDTO</value>
 			</list>
 		</property>
 	</bean>
