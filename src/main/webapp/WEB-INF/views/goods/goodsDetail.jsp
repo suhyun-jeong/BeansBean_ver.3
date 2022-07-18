@@ -122,8 +122,14 @@
 				$("#orderBtn").click(function() {
 					$("form").attr("action", "orderForm");
 				});
+	
 				
-		});//end ready
+				// 리뷰
+				$(".reply_btn").on("click", function () {
+						
+				})
+				
+	});//end ready
 		
 	
 		
@@ -146,7 +152,7 @@ ${goodsDetail}
 	}
 %>
 
-${goodsDetail.gname}
+<%-- ${goodsDetail.gname} --%>
 	<div>
 		<div style='width:80%'>
 				<div style='border-bottom:solid 1px #cecece'>
@@ -243,6 +249,19 @@ ${goodsDetail.gname}
 		<br> <button id="orderBtn">구매</button>
 		&nbsp;&nbsp;
 		<button class="test" id="cart" onclick="test()">장바구니</button>
+		
+		<div class="reply_wrab">
+			<div class="reply">
+				<h2>리뷰</h2>
+			</div>
+			
+			<c:if test="${not empty login}">
+				<div class="reply_btn">
+					<button>리뷰쓰기</button>
+				</div>
+			</c:if>
+		</div>
 	</div>
+	
 
 </FORM>
