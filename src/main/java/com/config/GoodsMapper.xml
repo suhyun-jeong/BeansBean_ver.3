@@ -78,6 +78,19 @@
 		UPDATE GOODS SET GAMOUNT = GAMOUNT - #{gamount} WHERE GCODE = #{gcode}
 	</update>
 	
+	<!-- 전체상품 주문 -->
+	<select id="orderAllConfirm" parameterType="arraylist" 
+	resultType="CartDTO">
+	 select num,userid,gCode,gName,gPrice, bCategory,vCategory,gAmount,gImage
+	 from cart
+	 where num
+	 IN
+	 <foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+	 </foreach>
+	</select> 
+	
 	<!-- 상품검색 -->
 	 <select id="findgoods"  resultType="GoodsDTO" parameterType="string">
 	
@@ -86,6 +99,8 @@
 		where gName = #{gName}
 	
 	</select>
+	
+	
 
 
 </mapper>

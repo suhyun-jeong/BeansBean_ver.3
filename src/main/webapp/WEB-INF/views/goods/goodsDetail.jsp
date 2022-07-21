@@ -106,16 +106,31 @@
 					}
 				});  //end ajax
 				
-
 				//cart 클릭이벤트
-				 $("#cart").on("click", function() {
-					$("form").attr("action", "loginCheck/cartAdd");
-					 var answer;
+				$("#cart").on("click", function() {
+					/* $("form").attr("action", "loginCheck/cartAdd"); */
+					var formData = $("form").serialize();
+					$.ajax({
+			            cache : false,
+			            url : "loginCheck/cartAdd", // 요기에
+			            type : 'POST', 
+			            data : formData, 
+			            success : function(data) {
+			               console.log("성공")
+			            }, // success 
+			    
+			            error : function(xhr, status) {
+			                alert(xhr + " : " + status);
+			            }
+			        }); // $.ajax */
+				 	var answer;
 					answer = confirm("상품을 장바구니에 담았습니다. 장바구니로 이동하시겠습니까?");
 					if(answer == true){
-						location.href = "loginCheck/cartList"
+						console.log("확인")
+						/* location = "loginCheck/cartList"  */
+						$("form").attr("action", "loginCheck/cartList");
 					} 
-				}) 
+				});//end clickevent
 				
 				
 				// 구매 버튼 클릭 시 구매 페이지로 이동
@@ -143,7 +158,7 @@ ${goodsDetail}
 	    <input type="hidden" name="gcode" value="${goodsDetail.gcode}">
 	    <input type="hidden" name="gname" value="${goodsDetail.gname}"> 
 	    <input type="hidden" name="gprice" value="${goodsDetail.gprice}">
-
+		<input type="hidden" name="userid" value="${login.userid}">
 
 <% 
 	MemberDTO login = (MemberDTO)session.getAttribute("login");
