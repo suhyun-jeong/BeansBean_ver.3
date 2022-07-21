@@ -28,11 +28,11 @@
 				<value>classpath:com/config/GoodsMapper.xml</value>
 				<value>classpath:com/config/OrderMapper.xml</value>
 				<value>classpath:com/config/BoardMapper.xml</value>
-				<value>classpath:com/config/ReplyMapper.xml</value>
+				<!-- <value>classpath:com/config/ReplyMapper.xml</value> -->
 			</list>
 		</property>
-		<!-- <property name="mapperLocations" value="classpath:com/dao/*.xml" /> -->
-		<!-- <property name="typeAliasesPackage" value="com.test" /> -->
+		<!--  <property name="mapperLocations" value="classpath:com/dao/*.xml" />  -->
+		<!-- <property name="typeAliasesPackage" value="com.test" />   -->
 		<property name="typeAliases">
 			<list>
 				<value>com.dto.BundleDTO</value><!-- dto클래스에서 alias명 지정 @Alias('alias명') -->
@@ -45,7 +45,7 @@
 				<value>com.dto.OrderinfoDTO</value>
 				<value>com.dto.OrderstateDTO</value>
 				<value>com.dto.VariationDTO</value>
-				<value>com.dto.ReplyDTO</value>
+				<!-- <value>com.dto.ReplyDTO</value> -->
 			</list>
 		</property>
 	</bean>

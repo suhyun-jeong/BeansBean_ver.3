@@ -78,6 +78,12 @@ public class GoodsService {
 	public  List<GoodsDTO> findgoods(GoodsDTO goodsdto) {
 		return dao.findgoods(goodsdto);
 	}
+
+	public void orderAllConfirm(ArrayList<CartDTO> list) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 
 }

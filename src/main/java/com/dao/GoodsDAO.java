@@ -85,6 +85,6 @@ public class GoodsDAO {
 		
 		return session.selectList("GoodsMapper.findgoods", goodsdto);
 	}
-	
 
+	
 }

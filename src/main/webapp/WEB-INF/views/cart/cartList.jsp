@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import= "java.net.URLEncoder"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <script
@@ -27,6 +28,56 @@ $(function() {
 		$("form").attr("action", "loginCheck/delAllCart");
 		$("form").submit();
 	})
+	
+	//전체주문
+	$("#orderAllConfirm").on("click", function() {
+		
+		var forms = $("form");
+		//console.log(forms);
+		
+		names = [];
+		
+		
+		
+		
+		for (f of forms) {
+			var ff = $(f);
+			var formName = ff.attr("id");
+			// console.log(formName);
+			names.push(formName);
+		}
+		console.log(names);
+		
+
+		var params = $("#" + names[0]).serialize();
+		for (var idx in names) {
+			if (idx == 0)
+				continue;
+			
+			params += "@@" + $("#" + names[idx]).serialize();
+			// console.log(names[idx]);
+		}
+		console.log(params);
+		console.log(typeof params);
+		
+		StringtxtEnc=URLEncoder.encod(parmas,"UTF-8");
+			
+			$.ajax({
+				url: "loginCheck/orderAllConfirm",
+				type:"get",
+				data: {"data":params},
+				datatype: "text",
+				success: function(data, status, xhr) {
+					console.log("success");
+					
+				},
+				error: function(xhr, status, error) {
+					console.log(error);
+				}			
+			});//end ajax
+			
+	});
+	
 	//전체선택
 	$("#allCheck").on("click", function() {
 		var result= this.checked;
@@ -34,6 +85,7 @@ $(function() {
 			this.checked= result;
 		});
 	});
+	
 	//삭제버튼 이벤트처리
 	$(".deleteBtn").on("click", function () {
 		console.log("삭제버튼 클릭 ");
@@ -106,9 +158,21 @@ $(function() {
 	
 	
 	<div>
-	<form name="myForm">
+	<forEach> 
 		<ul>
 			<c:forEach var="x" items="${cartList}">
+	<form id="myForm-${x.num}">
+			
+				<input type="hidden" name="num" value="${x.num}">
+				<input type="hidden" name="userid" value="${x.userid}">
+				<input type="hidden" name="gcode" value="${x.gcode}">
+				<input type="hidden" name="gname" value="${x.gname}">
+				<input type="hidden" name="gprice" value="${x.gprice}">
+				<input type="hidden" name="bcate" value="${x.bcategory}">
+				<input type="hidden" name="vcate" value="${x.vcategory}">
+				<input type="hidden" name="gamount" value="${x.gamount}">
+				<input type="hidden" name="image" value="${x.gimage}">
+			
 				 <input type="checkbox" name="check"
 					id="check81" class="check" value="${x.num}"/>
 					
@@ -159,6 +223,7 @@ $(function() {
 					class="deleteBtn" data-num="${x.num}"></li>
 				<li height="10"></li>
 				<hr>
+	</form>
 				</c:forEach>
 				
 				
@@ -166,7 +231,6 @@ $(function() {
 
 		
 		
-	</form>
 	</div>
 	
 		<div style="display">
@@ -178,10 +242,7 @@ $(function() {
 	
 
 		<div style = height:10px;>
-			<button onclick="orderAllConfirm(myForm)">전체 주문하기</button>
+			<button id="orderAllConfirm">전체 주문하기</button>
 			<button id="delAllCart">전체 삭제하기</button> 
+			<a class="a_black" href="goodsList?gCategory=">계속 쇼핑하기 </a>&nbsp;&nbsp;&nbsp;&nbsp;
 		</div>
-	
-
-
-		

@@ -1,5 +1,8 @@
 package com.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -101,15 +105,10 @@ public class GoodsController {
 		return list;
 	}
 	
-	@RequestMapping("/loginCheck/cartAdd")
-	public String cartAdd(CartDTO cart, HttpSession session) {
-		MemberDTO mDTO= (MemberDTO)session.getAttribute("login");
-		
-		cart.setUserid(mDTO.getUserid());
-		
-		session.setAttribute("mesg", cart.getGcode());
+	@ResponseBody
+	@RequestMapping(value = "/loginCheck/cartAdd",method = RequestMethod.POST )
+	public void cartAdd(CartDTO cart) {
 		service.cartAdd(cart);
-		return "redirect:../goodsDetail?gcode="+cart.getGcode();
 	}
 
 	@RequestMapping("/loginCheck/cartList")
@@ -136,13 +135,88 @@ public class GoodsController {
 		return "redirect:../loginCheck/cartList";
 	}
 	
+	@RequestMapping(value = "/loginCheck/orderAllConfirm")
+	public String orderAllConfirm(@RequestParam("data") String list) {
+		// System.out.println(list);
+		
+		
+		ArrayList<CartDTO> cList = new ArrayList<CartDTO>();
+		
+		
+		String[] carts = list.split("@@");	// 전체 리스트를 각 주문별로 쪼개기
+		for (String cartString : carts) {
+			String cart[] = cartString.split("&");	// 각 주문에 대해 속성별로 자르기
+
+			CartDTO cDTO;
+			 int num = 0;
+			 String userid = "";
+			 String gcode = "";
+			 String gname = "";
+			 int gprice = 0;
+			 String bcategory = "";
+			 String vcategory = "";
+			 int  gamount = 0;
+			 String gimage = "";
+			
+			for (String c : cart) {	// 각 속성별로 변수에 저장
+				// System.out.println(c);
+				
+				String cc[] = c.split("=");
+				
+				switch (cc[0]) {
+				case "num": 
+					num = Integer.parseInt(cc[1]);
+					break;
+				case "userid": 
+					userid = cc[1];
+					break;
+				case "gcode": 
+					gcode = cc[1];
+					break;
+				case "gname": 
+					gname = cc[1];
+					break;
+				case "gprice": 
+					gprice = Integer.parseInt(cc[1]);
+					break;
+				case "bcate": 
+					bcategory = cc[1];
+					break;
+				case "vcate": 
+					vcategory = cc[1];
+					break;
+				case "gamount": 
+					gamount = Integer.parseInt(cc[1]);
+					break;
+				case "image": 
+					gimage = cc[1];
+					break;
+				}
+			}
+			// dto 만들기
+			cDTO = new CartDTO(num, userid, gcode, gname, gprice, bcategory, vcategory, gamount, gimage);
+			
+			// System.out.println(cDTO);
+			
+			// 만든 dto 리스트에 추가
+			cList.add(cDTO);
+		}
+		
+		System.out.println(cList);
+		
+		
+		return "redirect:../loginCheck/orderForm2";
+	}
 	
+
 	@RequestMapping(value = "/loginCheck/cartUpdate")
 	@ResponseBody
 	public void cartUpdate(@RequestParam Map<String, String>map) {
 		System.out.println(map); //
 		service.cartUpdate(map);
 	}
+	
+	
 	
 //	@RequestMapping(value = "/goodslist")
 //	@ResponseBody
