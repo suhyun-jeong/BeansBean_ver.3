@@ -1,0 +1,262 @@
+sql 설정
+id : Beans 
+pwd : bean
+
+--sys관리자계정에서 생성 쿼리
+create user Beans IDENTIFIED by bean;
+grant connect, resource to Beans;
+-------------------------------------------------------
+ --Goods 테이블 
+ drop table goods;
+  create table goods
+  ( gCode varchar2(20) CONSTRAINT goods_gCode_PK PRIMARY KEY, 
+    gcategory varchar2(30) not null,
+	gName varchar2(50) not null,
+	gPrice NUMBER(10) not null,
+	gAmount INT not null,
+    gImage varchar2(20) not null
+  );   
+  
+  
+  
+  
+  -- goods의 option1테이블 대신 bundle테이블 새로 생성
+  drop table bundle;
+  create table bundle 
+  ( 
+    num int CONSTRAINT bundle_num_pk PRIMARY KEY,
+    gCode varchar2(20) ,
+    bCategory varchar2(50),
+    bPrice number(10) --딸기 10ea(1set) 99,000원 이런식이라 varchar2로
+  ) 
+
+  alter table bundle
+  add CONSTRAINT bundle_gCode_fk FOREIGN KEY(gCode)REFERENCES goods(gCode) ON DELETE CASCADE
+  
+ 
+ 
+    
+  --  goods의 option2 테이블 대신 varitaion 테이블 생성
+  drop table variation;
+  create table variation
+  (
+  num int CONSTRAINT variation_num_pk primary key ,
+  gCode varchar2(20) ,
+  vCategory varchar2(50) not null
+  )  
+  
+  alter table variation
+  add CONSTRAINT variation_gCode_fk FOREIGN KEY(gCode)REFERENCES goods(gCode) ON DELETE CASCADE;
+  
+    
+     
+   
+   
+-- Member 테이블 
+  drop table member;
+  create table member
+  (
+    userid VARCHAR2(20) constraint member_userid_pk primary key,
+    passwd VARCHAR2(20) not null,
+    username VARCHAR2(20)not null,
+    usercode number(2) ,
+    post number(10) not null, 
+    addr1 VARCHAR2(500) not null,
+    addr2 VARCHAR2(500) not null,
+    phone1 number(3) not null,
+    phone2 number(4) not null,
+    phone3 number(4) not null,
+    email1 VARCHAR2(30) not null,
+    email2 VARCHAR2(30) not null
+  )
+ -- alter table member rename column email to email1;
+ -- alter table member add email2 varchar2(30) not null;
+ 
+  
+ 
+
+  
+ -- Cart 테이블 
+  drop table cart;
+  create table cart
+  (  num int constraint cart_num_pk PRIMARY KEY,
+     userid VARCHAR2(20),
+     gCode varchar2(20) ,
+     gName varchar2(50) not null,
+	 gPrice NUMBER(10) not null,
+	 bCategory varchar2(50)  ,
+	 vCategory varchar2(50) ,
+     gAmount INT not null,
+     gImage varchar2(20) not null
+  );   
+   alter table cart
+   add CONSTRAINT cart_userid_fk FOREIGN KEY(userid)
+   REFERENCES member(userid) ON DELETE CASCADE;
+   
+   alter table cart
+   add CONSTRAINT cart_gCode_fk FOREIGN KEY(gCode)
+   REFERENCES goods(gCode) ON DELETE CASCADE;    
+   
+   
+   
+   
+   
+   
+  
+ 
+ -- orderinfo 테이블
+  drop table orderinfo;
+  create table orderinfo
+  (
+     num int constraint orderinfo_num_pk PRIMARY KEY,
+     userid VARCHAR2(20) not null,
+     gCode varchar2(20) not null, 
+     gName varchar2(50) not null,
+	 bCategory varchar2(50) not null ,
+	 vCategory varchar2(50) not null,
+     gPrice NUMBER(10) not null,
+     gAmount INT not null,
+     ordername VARCHAR2(20) not null , 
+     post number(10) not null, 
+     addr1 VARCHAR2(500) not null,
+     addr2 VARCHAR2(500) not null,
+     phone1 number(3) not null,
+     phone2 number(4) not null,
+     phone3 number(4) not null,
+     paymethod varchar(10) not null,
+     orderday date ,
+     gImage varchar2(30) not null
+  )
+ -- alter table orderinfo add gImage varchar2(30) not null;
+alter table orderinfo modify addr1 varchar2(500);
+alter table orderinfo modify addr2 varchar2(500);
+  
+   alter table orderinfo
+   add CONSTRAINT orderinfo_userid_fk FOREIGN KEY(userid)
+   REFERENCES member(userid) ON DELETE CASCADE;
+   
+   alter table orderinfo
+   add CONSTRAINT orderinfo_gCode_fk FOREIGN KEY(gCode)
+   REFERENCES goods(gCode) ON DELETE CASCADE;    
+  
+  
+  
+  
+ --  게시판 생성 . re_board, bu_board + ingrement 
+ 
+ 
+ --re_board 테이블 (래시피보드)
+drop table cook_BRD;
+
+CREATE TABLE cook_BRD
+(
+    num INT constraint cook_BRD_num_pk PRIMARY KEY, 
+    userid VARCHAR(20), 
+    type_num number(2), 
+    title VARCHAR(50) ,
+	content VARCHAR(1000) , 
+    regdate date   
+);
+
+alter table cook_BRD
+ add CONSTRAINT cook_BRD_userid_fk FOREIGN KEY(userid)
+ REFERENCES member(userid) ON DELETE CASCADE;
+
+
+
+
+
+--ingrement 테이블생성 ( re_board의 재료 목록 테이블)
+
+drop table ingrement;
+create table ingrement 
+(   
+    ingreNo int constraint ingrement_ingreNo_pk PRIMARY KEY,
+    num INT , 
+    ingre VARCHAR(50),
+    capacity int 
+);
+
+  alter table  ingrement 
+  add constraint ingrement_num_fk foreign key(num) 
+  references cook_BRD(num) on delete cascade;
+  
+  
+
+-- bu_board 테이블 생성(비즈니스 보드)
+drop table info_BRD;
+CREATE TABLE info_BRD
+(
+    num INT constraint info_BRD_num_pk PRIMARY KEY, 
+    userid VARCHAR(20), --fk
+    type_num number(2),
+    title VARCHAR(50) NOT NULL,
+	content VARCHAR(1000) NOT NULL, 
+    regdate  DATE not null
+);
+  
+ alter table info_BRD
+ add CONSTRAINT info_BRD_userid_fk FOREIGN KEY(userid)
+ REFERENCES member(userid) ON DELETE CASCADE;
+
+
+ 
+ 
+
+   
+------------------------시퀀스 생성----------
+create sequence cart_seq;
+create sequence orderinfo_seq;
+create sequence re_board_seq;   
+create sequence bu_board_seq;  
+create sequence bundle_seq;
+create sequence variation_seq;
+create sequence ingerment_seq;
+
+
+------------------- goods데이터 추가 쿼리
+
+goods 테이블의 gcategory 타입크기 증가 10->30 
+ > 이유 :  VARCHAR2(10) 크기부족 
+sql 쿼리 > alter table goods modify gcategory varchar2(30);
+
+
+-- goods 임시 데이터 삽입.
+--gcode, gcategory , gname, gprice, gamount, gimage
+
+insert into goods values('C00001', 'coffee', '커피필 원두커피 1kg', 9200, 120, 'C1');
+insert into goods values('C00002', 'coffee', '인스턴트커피 500g', 3000, 270, 'C2');
+insert into goods values('C00003', 'coffee', '인스턴트커피 2kg', 10000, 190, 'C3');
+insert into goods values('C00004', 'coffee', '헤이즐넛 향 커피 230g', 5700, 300, 'C4');
+insert into goods values('C00005', 'coffee', '헤이즐넛 향 커피 650g', 9500, 200, 'C5');
+insert into goods values('C00006', 'coffee', '헤이즐넛 향 커피 1.2kg', 17000, 80, 'C6');
+insert into goods values('C00007', 'coffee', '모카골드 커피믹스 100T', 13000, 360, 'C7');
+insert into goods values('C00008', 'coffee', '모카골드 커피믹스 250T', 27000, 150, 'C8');
+insert into goods values('C00009', 'coffee', '캡슐커피 30캡슐 5세트', 31900, 50, 'C9');
+insert into goods values('C00010', 'coffee', '캡슐커피 30캡슐', 9500, 100, 'C10');
+
+insert into goods values('T00001', 'liquid', '아이스티 파우더 500g', 4000, 370, 'T1');
+insert into goods values('T00002', 'liquid', '아이스티 파우더 2kg', 13800, 150, 'T2');
+insert into goods values('T00003', 'liquid', '복숭아 홍차 원액 1050ml', 27000, 150, 'T3');
+insert into goods values('T00004', 'liquid', '복숭아 홍차 원액 450ml', 15000, 300, 'T4');
+insert into goods values('T00005', 'liquid', '꿀유자차 1kg', 7500, 450, 'T5');
+insert into goods values('T00006', 'liquid', '유자청 500g', 4700, 270, 'T6');
+insert into goods values('T00007', 'liquid', '밀크티 파우더 500g', 7500, 200, 'T7');
+insert into goods values('T00008', 'liquid', '밀크티 파우더 1kg', 12000, 180, 'T8');
+insert into goods values('T00009', 'liquid', '패션후르츠 액상차 480g', 6300, 440, 'T9');
+insert into goods values('T00010', 'liquid', '패션후르츠 액상차 1kg', 11000, 200, 'T10');
+
+insert into goods values('A00001', 'baverage', '청포도 베이스 원액 1.2kg', 11800, 300, 'A1');
+insert into goods values('A00002', 'baverage', '청포도 베이스 원액 600g', 7200, 500, 'A2');
+insert into goods values('A00003', 'baverage', '레몬 베이스 원액 0.5L', 6800, 420, 'A3');
+insert into goods values('A00004', 'baverage', '레몬 베이스 원액 1.2L', 13400, 300, 'A4');
+insert into goods values('A00005', 'baverage', '망고 스무디 시럽 750g', 10800, 700, 'A5');
+insert into goods values('A00006', 'baverage', '망고 스무디 시럽 1.5kg', 19800, 180, 'A6');
+insert into goods values('A00007', 'baverage', '딸기 시럽 540g', 8800, 300, 'A7');
+insert into goods values('A00008', 'baverage', '딸기 시럽 980g', 15400, 150, 'A8');
+insert into goods values('A00009', 'baverage', '블루베리 시럽 1L', 16800, 300, 'A9');
+insert into goods values('A00010', 'baverage', '블루베리 시럽 2L', 31000, 300, 'A10');
+
+
+
+
